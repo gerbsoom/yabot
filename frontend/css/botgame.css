@@ -1,0 +1,257 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+a {
+	color: #999;
+	text-decoration: none;
+}
+body {
+	/** background could be done again with a higher resoluition to have a better gradient	*/
+	background: #000 url(../img/background.png) repeat-x fixed left bottom;
+	/*background: #000 url(../img/body_bg.png) repeat-x fixed left bottom;*/
+	color: #555;
+	font: normal 0.8em sans-serif,Arial;
+	margin: 20px 0;
+	text-align: center;
+}
+ul {
+	margin: 12px 0;
+}
+li {
+	list-style: url(../img/marker1.png);
+	margin-left: 18px;
+}
+/*_______________________________________________________________________________________________*/
+
+/*	______________________________________________________________________________________________
+	Only the image and one headline in the complete header 
+*/
+.header {
+	background: #222 url(../img/header.png) no-repeat;
+	height: 200px;
+}
+.header h1 {
+	color: #555;
+	font: normal 2.6em Tahoma,sans-serif;
+	padding: 16px 20px;
+}
+
+.header h2 {
+    color: #AAA;
+    font-family: Consolas, monospace;
+    text-align: center;
+    padding: 5px ;
+}
+
+.statusConsole
+{
+    position:relative;
+    z-index:2;
+    height:160px;
+    width:450px;
+    color: #0e7b07;
+    font-family: Consolas, monospace;
+    background: transparent;
+    margin-bottom: 0;
+    margin-left: 2px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.consoleButton
+{
+    position:relative;
+    z-index:1;
+    padding-top: 0px;
+    margin-bottom: 0;
+    margin-left: 0px;
+    color: #AAA;
+    font-family: Consolas, monospace;
+    background: transparent;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.statusConsoleTextArea
+{
+    position:relative;
+    z-index:1;
+    height:140px;
+    width:450px;
+    color: #22FF22;
+    font-family: Consolas, monospace;
+    background: transparent;
+    margin-bottom:0;
+    margin-left:0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.loggedInUserLabel
+{
+    position:absolute;
+    width:175px;
+    color: #888888;
+    font-family: Consolas, monospace;
+    background: transparent;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    float: right;
+}
+
+.inputAndLabels
+{
+    display : block;
+}
+
+.inputcontainer
+{
+
+    margin: 20px auto 4px auto;
+    /*display : block;
+    padding: 10px;
+    margin: 10px;*/
+}
+
+/*	______________________________________________________________________________________________
+	Style sheets for the navigation (img 'bgmenu2.png' should be replaced soon)
+	 - Ported from 'a' to 'td' with 'span' in it, does not look well
+	 - Events only come from the selecteable 'span' tag inside
+*/
+.navigation td {
+	background: #000 url(../img/bgmenu2.png) repeat-x;
+	border-right: 1px solid #222;
+	border-top: 1px solid #1A1A1A;
+	color: #444;
+	float: left;
+	font-size: 1.2em;
+	padding-top: 4px;
+	width: 124px; height: 36px;
+}
+.navigation td span {
+	padding-left: 6px;
+}
+.navigation td:hover {
+	background-position: left bottom;
+	color: #666;
+}
+.navigation td#last {
+	border-right: none;
+	width: 150px;
+}
+
+/* 	______________________________________________________________________________________________
+	Base of all DIV comntainer, everything is added here in the following order
+	 - Header
+	 - Navigation
+	 - Dynamic DIVs below get replaced when a navigation event is triggered
+*/
+.contentPanel {
+	background: #000; 
+	border: 3px double #EEE; 
+	border-color: #141414 #202020 #222 #202020; 
+	margin: 20px auto 4px auto; 
+	text-align: left;
+	width: 1000px;
+}
+
+.canvasPaintDiv {
+	cursor: pointer;
+	z-index: 10;
+	border: solid 1px #000;
+}
+
+/*	______________________________________________________________________________________________
+	tabPanels are not used at all but all components get loaded via a tabPanel-related gen methods
+	 - could be a good container for a tab-look-like bordering which could provide SCROLLING
+		-->	Done
+	 - So far everything is pushed to the left, there is the need of a block alignment
+	 - Width and Height should be parameters when calling the component constructors
+*/
+.tabPanel {
+	background: #1A1A1A;
+	border-top: 1px solid #1A1A1A;
+	clear: both;
+}
+.tabPanel h1 {
+	color: #666;
+	font: bold 1.1em sans-serif,Arial;
+	margin: 0 0 4px;
+}
+.tabPanel p {
+	margin: 0 0 12px;
+}
+
+.tabPage {
+    background: #1A1A1A;
+    border-top: 1px solid #1A1A1A;
+    clear: both;
+}
+.tabPage h1 {
+    color: #666;
+    font: bold 1.1em sans-serif,Arial;
+    margin: 0 0 4px;
+}
+.tabPage p {
+    margin: 0 0 12px;
+}
+
+/*	______________________________________________________________________________________________
+	All DIVs which gets replaced when navigating are from class component
+	 - there is the need of a top-margin for a first headline
+	 - image 'bgitem.gif' has to be replaced but looks nice
+	 - subdivs often have the same class as it does not much but the pretty image 
+*/
+.component {
+	background: #030303 url(../img/bgitem.gif) repeat-x;
+	padding: 10px 12px;
+}
+
+.component_wide {
+    background: #030303 url(../img/bgitem.gif) repeat-x;
+    padding: 10px 12px;
+    height:250px;
+}
+
+.component h1 {
+	color: #666;
+	font: bold 1.1em sans-serif,Arial;
+	margin-top: 3px;
+}
+
+.component img {
+	border: 2px double #EEE;
+	width: 120px;
+	height: 100px;
+	margin: 15px 10px 0px 0px;
+}
+
+.left {float: left;}
+.right {float: right;}
+.clearer {clear: both;}
+
+.float-left {
+    float:left;
+    width:33%;
+}
+
+.select-style {
+    border: 1px solid #ccc;
+    color: #FFFFFF;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: transparent;
+    /**background: #fafafa url("data:image/png;base64,R0lGODlhDwAUAIABAAAAAP///yH5BAEAAAEALAAAAAAPABQAAAIXjI+py+0Po5wH2HsXzmw//lHiSJZmUAAAOw==") no-repeat 90% 50%;*/
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}

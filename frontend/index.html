@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<title>YaBot Game</title>
+		<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+
+		<link rel="stylesheet" type="text/css" href="css/botgame.css" />
+		<link rel="stylesheet" type="text/css" href="css/toolbar-tries.css" />
+
+        <script type="text/javascript" src="js/botgame.js"></script>
+
+		<script type="text/javascript" src="js/view/account/login.js"></script>
+		<script type="text/javascript" src="js/view/home.js"></script>
+        <script type="text/javascript" src="js/view/header.js"></script>
+        <script type="text/javascript" src="js/view/account/account.js"></script>
+        <script type="text/javascript" src="js/view/account/register.js"></script>
+		<script type="text/javascript" src="js/view/battlefield/battlefield.js"></script>
+        <script type="text/javascript" src="js/view/navigation.js"></script>
+
+		<script type="text/javascript" src="js/view/game/game.js"></script>
+		<script type="text/javascript" src="js/view/game/creategame.js"></script>
+		<script type="text/javascript" src="js/view/game/listgames.js"></script>
+		<script type="text/javascript" src="js/view/game/showcreated.js"></script>
+
+		<script type="text/javascript" src="js/view/botlab/botlab.js"></script>
+		<script type="text/javascript" src="js/view/botlab/northtoolbar.js"></script>
+
+        <script type="text/javascript" src="js/view/administration/administration.js"></script>
+        <script type="text/javascript" src="js/view/administration/adminCacheEntry.js"></script>
+        <script type="text/javascript" src="js/view/administration/adminCacheList.js"></script>
+
+        <script type="text/javascript" src="js/controller/game.js"></script>
+        <script type="text/javascript" src="js/controller/account.js"></script>
+        <script type="text/javascript" src="js/controller/navigation.js"></script>
+        <script type="text/javascript" src="js/controller/battlefield.js"></script>
+        <script type="text/javascript" src="js/controller/statusconsole.js"></script>
+
+        <script type="text/javascript" src="js/lib/core.js"></script>
+        <script type="text/javascript" src="js/lib/model/bot.js"></script>
+        <script type="text/javascript" src="js/lib/model/math/coordinate.js"></script>
+        <script type="text/javascript" src="js/lib/model/battlefield.js"></script>
+
+        <script type="text/javascript" src="js/lib/persistence/cache.js"></script>
+        <script type="text/javascript" src="js/lib/network/backend.js"></script>
+        <script type="text/javascript" src="js/lib/network/account.js"></script>
+        <script type="text/javascript" src="js/lib/network/game.js"></script>
+        <script type="text/javascript" src="js/lib/network/battlefield.js"></script>
+
+        <script type="text/javascript" src="js/lib/ui/component/tabpage.js"></script>
+        <script type="text/javascript" src="js/lib/ui/component/inputfield.js"></script>
+        <script type="text/javascript" src="js/lib/ui/component/selectbox.js"></script>
+
+        <script type="text/javascript" src="js/lib/external/md5sum.js"></script>
+		<script type="text/javascript" src="js/lib/external/jquery-2.1.1.js"></script>
+        <script type="text/javascript" src="js/lib/external/socket.io/socket.io.js"></script>
+
+	</head>
+	<body>
+		<script>
+            setupUI();
+            initWebSocket();
+        </script>
+	</body>
+</html>

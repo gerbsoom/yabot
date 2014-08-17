@@ -1,0 +1,221 @@
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+.clearfix
+{
+    zoom: 1;
+}
+
+.left {
+    float: left;
+    width: 33%;
+}
+
+.myToolbarButton
+{
+    background-color: rgba(24, 22, 93, 0.45);
+    color: #daeded;
+    font-size: medium;
+    font-family: Consolas, monospace;
+}
+
+.myToolbarButton:hover
+{
+    background-color: rgba(5, 3, 131, 0.79);
+    border-style: none;
+    color: #FFFFFF;
+    font-size: medium;
+    font-family: Consolas, monospace;
+}
+
+.leftToolBox
+{
+    border: solid;
+    float: left;
+    margin: 0px 10px 0px 10px;
+}
+
+.sliderLabel
+{
+    float: left;
+    color: #FFFFFF;
+    margin: 0px 10px 0px 10px;
+    font-family: Consolas, monospace;
+}
+
+.sliderLabel2
+{
+    float: right;
+    color: #FFFFFF;
+    margin: 0px 10px 0px 10px;
+    font-family: Consolas, monospace;
+}
+
+.rightToolBox
+{
+    border: solid;
+    float: left;
+    margin: 0px 10px 0px 10px;
+}
+
+
+.battlefieldButton
+{
+    float: left;
+    margin: 0px 10px 0px 10px;
+}
+
+.battlefieldButton2
+{
+    float: left;
+    margin: 0px 10px 0px 10px;
+}
+
+.botComboBoxLabel
+{
+    color: #FFFFFF;
+    float: left;
+    margin: 0px 10px 0px 10px;
+    font-family: Consolas, monospace;
+}
+
+.botComboBox
+{
+    color: #FFFFFF;
+    float: left;
+    margin: 0px 10px 0px 10px;
+    font-family: Consolas, monospace;
+}
+
+/**
+___________________________________________________________
+SelectBoxContainer-Widget-Styles
+___________________________________________________________
+*/
+.selectboxContainer
+{
+    display: block;
+    text-align: center;
+}
+
+.selectBox-style-small {
+    border: 1px solid #ccc;
+    color: #FFFFFF;
+    width: 90px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: transparent;
+    /**background: #fafafa url("data:image/png;base64,R0lGODlhDwAUAIABAAAAAP///yH5BAEAAAEALAAAAAAPABQAAAIXjI+py+0Po5wH2HsXzmw//lHiSJZmUAAAOw==") no-repeat 90% 50%;*/
+}
+
+.selectBox-style-small select {
+    padding: 5px 8px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.selectBox-style-small select:focus {
+    outline: none;
+}
+
+.selectBox-style-medium {
+    border: 1px solid #ccc;
+    color: #FFFFFF;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: transparent;
+    /**background: #fafafa url("data:image/png;base64,R0lGODlhDwAUAIABAAAAAP///yH5BAEAAAEALAAAAAAPABQAAAIXjI+py+0Po5wH2HsXzmw//lHiSJZmUAAAOw==") no-repeat 90% 50%;*/
+}
+
+.selectBox-style-medium select {
+    padding: 5px 8px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.selectBox-styl-mediume select:focus {
+    outline: none;
+}
+
+.gameMenuButtons
+{
+    display: inline-block;
+    color: #444444;
+    font-family: Consolas, monospace;
+    margin: 10px auto;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.tbInputs
+{
+    display: inline-block;
+    color: #222222;
+    margin: 0px 0px 10px 10px;
+    font-family: Consolas, monospace;
+}
+
+.selectBoxLabel
+{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 100px;
+    text-align: left;
+    color: #FFFFFF;
+    /*margin: 0px 10px 0px 10px;*/
+    font-family: Consolas, monospace;
+}
+
+.tinyGameConsole
+{
+    /*position:relative;
+    z-index:2;*/
+    height:255px;
+    width:250px;
+    color: #0a00ab;
+    font: normal 1em Consolas, monospace;
+    background: transparent;
+    margin-bottom: 0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.tinyConsoleButton
+{
+    position:relative;
+    z-index:1;
+    padding-top: 0px;
+    margin-bottom: 0;
+    margin-left: 0px;
+    color: #AAA;
+    font-family: Consolas, monospace;
+    background: transparent;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.tinyConsoleTextArea
+{
+    position:relative;
+    z-index:1;
+    height:100px;
+    width:244px;
+    color: #0a00ab;
+    font: normal 1em Consolas, monospace;
+    background: transparent;
+    margin-bottom:0;
+    margin-left:0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
