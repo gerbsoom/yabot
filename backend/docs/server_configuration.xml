@@ -1,0 +1,70 @@
+<configuration>
+
+    <system>
+        <registeredBots>
+            <bot id="1">
+                <userId>0</userId>
+                <uniqueId>CpuBot1</uniqueId>
+            </bot>
+            <bot id="2">
+                <userId>0</userId>
+                <uniqueId>CpuBot2</uniqueId>
+            </bot>
+            <bot id="3">
+                <userId>1</userId>
+                <uniqueId>UserId1BotId1</uniqueId>
+            </bot>
+            <bot id="4">
+                <userId>1</userId>
+                <uniqueId>UserId1BotId2</uniqueId>
+            </bot>
+            <bot id="5">
+                <userId>2</userId>
+                <uniqueId>UserId2BotId1</uniqueId>
+            </bot>
+        </registeredBots>
+    </system>
+
+    <players>
+        <player id="0" name="CPU 1">
+            <password>0</password>
+            <bots>
+                <bot id="1" name="Bot1"><uniqueId>CpuBot1</uniqueId></bot>
+                <bot id="2" name="Bot2"><uniqueId>CpuBot12</uniqueId></bot>
+            </bots>
+        </player>
+        <player id="1" name="Player 1">
+            <password>1234</password>
+            <bots>
+                <bot id="1" name="Bot1"><uniqueId>UserId1BotId1</uniqueId></bot>
+                <bot id="2" name="Bot2"><uniqueId>UserId1BotId2</uniqueId></bot>
+            </bots>
+        </player>
+        <player id="2" name="Player 2">
+            <password>1234</password>
+            <bots>
+                <bot id="1" name="Bot1"><uniqueId>UserId2BotId1</uniqueId></bot>
+            </bots>
+        </player>
+    </players>
+
+    <games>
+        <game id="1" width="8" height="8">
+            <users>
+                <user id="1">
+                    <createdGame>1</createdGame>
+                    <bots>
+                        <bot>1</bot>
+                    </bots>
+                </user>
+                <user id="2">
+                    <createdGame>0</createdGame>
+                    <bots>
+                        <bot>1</bot>
+                    </bots>
+                </user>
+            </users>
+        </game>
+    </games>
+
+</configuration>

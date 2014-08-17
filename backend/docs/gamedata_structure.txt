@@ -1,0 +1,25 @@
+Rediska cache structure:
+
+    Root Entry:         botgame/
+
+
+    CPU Bots:           botgame/registeredBots/<botId>/serializedBotData
+
+
+    Player:             botgame/registeredPlayer/loginName/loggedIn
+                                                          /passwordHash
+                                                          /queuedChatMessages
+                                                          /registeredBots/<botId>/serializedBotData
+                                                          /statistics/games/played
+
+
+    Games:              botgame/runningGames
+
+
+    Battlefield:        botgame/<gameId>/battlefield/width
+                                                    /height
+                                                    /botIds
+                                                    /playerIds
+                                                    /fieldData/<posX>/<posY>/serializedFieldData
+
+    Statistics:         botgame/statistics/<Y-m-d>/games/<playerId>/<playerId>/serializedGameResult
