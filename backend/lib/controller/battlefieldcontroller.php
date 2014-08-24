@@ -45,6 +45,7 @@ class BattlefieldController extends ControllerBase
         $loginName = $this->params["loginName"];
         if ($this->cache->sessionTimedOut($loginName, $this->maxSessionTimeout))
         {
+            $this->log->debug("Session was time out!");
             $this->backendResult->setResult("Not Ok", "Session was timed out!!");
         }
         else
@@ -54,31 +55,33 @@ class BattlefieldController extends ControllerBase
             {// and that the game still exists
                 if ($this->cache->checkIfGameExists($gameName))
                 {
-                    $battleFieldHandler = new BattlefieldHandler( $this->backendResult, $gameName);
+                    $battleFieldHandler = new BattlefieldHandler($this->backendResult);
                     if ($action == "getCurrentBattlefieldState")
                     {
-                        $battleFieldHandler->getCurrentState();
+                        $this->log->debug("Returning currentBattlefieldState");
+                        $battleFieldHandler->getCurrentBattlefieldState($gameName);
                     }
                     else if ($action == "getFieldState")
                     {
-                        $battleFieldHandler->getFieldState($this->params["posX"], $this->params["posY"]);
+                        $this->log->debug("Returning Field state at pos (".$this->params["posX"].",".$this->params["posY"].")");
+                        $battleFieldHandler->getFieldState($gameName, $this->params["posX"], $this->params["posY"]);
                     }
                     else if ($action == "addBot")
                     {
-                        myLog("Adding bot ".$this->params["botId"]." to game $gameName for user $loginName");
+                        $this->log->debug("Adding bot ".$this->params["botId"]." to game $gameName for user $loginName");
                         $battleFieldHandler->addBot($loginName, $this->params["botId"], $gameName);
                     }
                     $this->cache->updateLastActivity($loginName, "battlefield::$action");
                 }
                 else
                 {
-                    myLog("The requested game could not be found anymore!");
+                    $this->log->debug("The requested game could not be found anymore!");
                     $this->backendResult->setResult("Not Ok", "Requested game could not be found!");
                 }
             }
             else
             {
-                myLog("Someone called backend action [battlefield::".$action."] without being authenticated");
+                $this->log->debug("Someone called backend action [battlefield::".$action."] without being authenticated");
                 $this->backendResult->setResult("Not Ok", "You must be logged in to proceed!");
             }
         }

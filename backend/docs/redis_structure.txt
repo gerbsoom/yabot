@@ -4,22 +4,22 @@ Rediska cache structure:
     Session Keys:       [ROOT]                  ./sessionKeys/
                         [KEY]{as:JSON-encoded $_SESSION}     ./<id>
                         [HASH_MAP]              ./gameSessionKeys
-    Lists:              [KEY_LIST]              ./knownUsers
+    Lists:              [KEY_LIST]              ./loggedInUser
                         [KEY_LIST]              ./runningGames
-                        [KEY_LIST]              ./registeredPlayer
-    Player Keys:        [ROOT]                  ./registeredPlayer/<loginName>/
-                        [KEY]                                                 ./lastActivity
-                        [KEY]                                                 ./passwordHash
-                        [KEY_LIST]                                            ./queuedChatMessages
-                        [KEY_LIST]                                            ./registeredBots
-                        [KEY]{as:serialized BotObject}                        ./registeredBots/<botId>
-                        [KEY]                                                 ./statistics/playedGames
+                        [KEY_LIST]              ./registeredUsers
+    Player Keys:        [ROOT]                  ./registeredUsers/<loginName>/
+                        [KEY]                                               ./lastActivity
+                        [KEY]                                               ./passwordHash
+                        [KEY_LIST]                                          ./queuedChatMessages
+                        [KEY_LIST]                                          ./registeredBots
+                        [KEY]{as:serialized BotObject}                      ./registeredBots/<botId>
+                        [KEY]                                               ./statistics/playedGames
     <toDo>
-    Game Keys:                           botgame/<gameId>/battlefield/width
-                                                                     /height
-                                                                     /botIds
-                                                                     /playerIds
-                                                                     /fieldData/<posX>/<posY>/serializedFieldData
+    Game Keys:                           botgame/games/<gameId>/battlefield/width
+                                                                           /height
+                                                                           /botIds
+                                                                           /playerIds
+                                                                           /fieldData/<posX>/<posY>/serializedFieldData
     <toDo>
     CPU Bots:           botgame/registeredBots/<botId>/serializedBotData
     Statistics:         botgame/statistics/<Y-m-d>/games/<playerId>/<playerId>/serializedGameResult

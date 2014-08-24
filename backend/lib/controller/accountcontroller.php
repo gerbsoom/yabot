@@ -26,7 +26,6 @@ class AccountController extends ControllerBase
                 return true;
             }
         }
-
         return false;
     }
 
@@ -38,28 +37,19 @@ class AccountController extends ControllerBase
         $accountHandler = new AccountHandler($this->backendResult);
         $action = $this->params["action"];
 
-        if ($action == "selectServer")
+       if ($action == "register")
         {
-            myLog("Affirmative server version for select");
-            $this->backendResult->setResult("OK");
-            $data = new stdClass();
-            $data->version="0.1";
-            $this->backendResult->setData($data);
-        }
-        else if ($action == "register")
-        {
-            myLog("Registering account for user ".$this->params["loginName"]);
+            $this->log->debug("Registering account for user ".$this->params["loginName"]);
             $accountHandler->register($this->params["loginName"], $this->params["passwordHash"]);
         }
         else if ($this->params["action"] == "delete")
         {
-            myLog("Deleting account for user ".$this->params["loginName"]);
+            $this->log->debug("Deleting account for user ".$this->params["loginName"]);
             $accountHandler->delete($this->params["loginName"], $this->params["passwordHash"]);
         }
         else if ($action == "login")
         {
-            $loggedIn = false;
-            myLog("Login into account for user".$this->params["loginName"]);
+            $this->log->debug("Login into account for user".$this->params["loginName"]);
             if ($this->cache->isUserLoggedIn($this->params["loginName"]))
             {// toDo: Play with OK/Not Ok and get the frontend to handle both cases better
                 $this->backendResult->setResult("Not Ok", "Not possible to login when already logged in!");
@@ -71,7 +61,7 @@ class AccountController extends ControllerBase
         }
         else if ($action == "logout")
         {
-            myLog("Logout user ".$this->params["loginName"]);
+            $this->log->debug("Logout user ".$this->params["loginName"]);
             if (!$this->cache->isUserLoggedIn($this->params["loginName"]))
             {// toDo: Play with OK/Not Ok and get the frontend to handle both cases better
                 $this->backendResult->setResult("Not Ok", "Not possible to logout when NOT logged in!");

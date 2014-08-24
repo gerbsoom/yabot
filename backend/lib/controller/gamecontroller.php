@@ -15,7 +15,7 @@ class GameController extends ControllerBase
         {
             return true;
         }
-        else if (in_array($action, array("createGame", "deleteGame", "joinGame", "quitGame")))
+        else if (in_array($action, array("createGame", "deleteGame", "joinGame", "disconnectGame", "quitGame")))
         {
             if (isset($this->params["gameName"]) && isset($this->params["loginName"]))
             {
@@ -35,6 +35,7 @@ class GameController extends ControllerBase
         $loginName = $this->params["loginName"];
         if ($this->cache->sessionTimedOut($loginName, $this->maxSessionTimeout))
         {
+            $this->log->debug("Session was time out!");
             $this->backendResult->setResult("Not Ok", "Session was timed out!");
         }
         else
@@ -47,7 +48,7 @@ class GameController extends ControllerBase
             {
                 if ($action == "createGame")
                 {
-                    myLog("Creating new game $gameName for user $loginName");
+                    $this->log->debug("Creating new game $gameName for user $loginName");
                     $gameNumPlayer = 2;
                     $width = $height = 16;
                     if (isset($this->params["gameWidth"])) $width = $this->params["gameWidth"];
@@ -58,28 +59,28 @@ class GameController extends ControllerBase
                 }
                 else if ($action == "deleteGame")
                 {
-                    myLog("Deleting existing game $gameName for user $loginName");
+                    $this->log->debug("Deleting existing game $gameName for user $loginName");
                     $gameHandler->deleteGame($loginName, $gameName);
                 }
                 else if ($action == "joinGame")
                 {
-                    myLog("Join existing game $gameName for user $loginName");
+                    $this->log->debug("Join existing game $gameName for user $loginName");
                     $gameHandler->joinGame($loginName, $gameName);
                 }
-                else if ($action == "quitGame")
+                else if ($action == "disconnectGame")
                 {
-                    myLog("User $loginName quits game $gameName");
-                    $gameHandler->quitGame($loginName, $gameName);
+                    $this->log->debug("User $loginName quits game $gameName");
+                    $gameHandler->disconnectGame($loginName, $gameName);
                 }
                 else if ($action == "listGames")
                 {
-                    myLog("Listing existing games for user $loginName");
+                    $this->log->debug("Listing existing games for user $loginName");
                     $gameHandler->listGames();
                 }
             }
             else
             {
-                myLog("Someone called backend action [game::$action] without being authenticated");
+                $this->log->debug("Someone called backend action [game::$action] without being authenticated");
                 $this->backendResult->setResult("Not Ok", "You must be logged in to proceed!");
             }
         }

@@ -6,9 +6,10 @@
 require_once("boot.php");
 
 // register an own SessionSaveHandler to store session data in Rediska
-$handler = new RedisSessionSaveHandler($rediska, "botgame/sessionKeys/");
+$handler = new SessionSaveHandler($rediska, "botgame/sessionKeys/");
 
-session_set_save_handler(
+session_set_save_handler
+(
     array($handler, 'open'),
     array($handler, 'close'),
     array($handler, 'read'),
@@ -21,6 +22,8 @@ session_set_save_handler(
 register_shutdown_function('session_write_close');
 session_start();
 
+$log = LoggerRegistry::getLogger("entrypoint");
+
 /**
  * Exits with an error message.
  *
@@ -28,7 +31,8 @@ session_start();
  */
 function dieOutputError($_errorMessage)
 {
-    myLog("EntryPoint: ".$_errorMessage);
+    $log = LoggerRegistry::getLogger("entrypoint_DIED_");
+    $log->err($_errorMessage);
     die($_errorMessage);
 }
 
@@ -39,6 +43,8 @@ function dieOutputError($_errorMessage)
  */
 function sendResponse($_response)
 {
+    $log = LoggerRegistry::getLogger("entrypoint_SUCCESS_");
+    $log->debug($_response);
     header('Content-type: application/json');
     echo $_response;
 }
@@ -64,32 +70,34 @@ function submittedValueFor($_key)
     else return "";
 }
 
-$componentManager = new ComponentManager();
-$validCommands = $componentManager->getValidCommands();
-$cmdController = $componentManager->getCmdController();
-
+$components = new Components();
+$actions = $components->getActions();
+$controller = $components->getController();
 
 $loginName = submittedValueFor("loginName");
 $controllerName = submittedValueFor("controller");
 $_SESSION['user']['username'] = $loginName;
-if (in_array($controllerName, array_keys($validCommands)))
+if (in_array($controllerName, array_keys($actions)))
 {
     $action = submittedValueFor("action");
-    myLog("Serving request [$controllerName|$action] for user: $loginName");
-    if (in_array($action, $validCommands[$controllerName]["actions"]))
+    $log->debug("_____________________________________________________________________________________________________");
+    $log->debug("Serving request [$controllerName|$action] for user: $loginName");
+    if (in_array($action, $actions[$controllerName]["actions"]))
     {
         $parsedParameters = array("controller"=>$controllerName, "action"=>$action);
-        foreach ($validCommands[$controllerName]["params"] as $parameter)
+        foreach ($actions[$controllerName]["params"] as $parameter)
         {
-            $parsedParameters[$parameter] = submittedValueFor($parameter);
+            $value = submittedValueFor($parameter);
+            if ($value) $log->debug(" --> parameter[$parameter] = '$value'");
+            $parsedParameters[$parameter] = $value;
         }
-        /** @var ControllerBase $controller */
-        $controller = new $cmdController[$controllerName]($parsedParameters);
-        if ($controller->validateParameters())
+        /** @var ControllerBase $requestedController */
+        $requestedController = new $controller[$controllerName]($parsedParameters);
+        if ($requestedController->validateParameters())
         {
-            if ($controller->checkPermissions())
+            if ($requestedController->checkPermissions())
             {
-                sendResponse($controller->executeAction());
+                sendResponse($requestedController->executeAction());
             }
             else dieOutputError("Insufficient permissions at [$controllerName::$action] for user #$loginName");
         }

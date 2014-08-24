@@ -12,31 +12,30 @@ class GameHandler extends HandlerBase
      * @param string$_gameName The unique name of the game that gets created.
      * @param int $_width The width of the game that gets created.
      * @param int $_height The height of the game that gets created
-     * @param int $_gameNumPlayer Defines the amount of game player.
+     * @param int $_maxPlayer Defines the amount of game player.
      * @return bool True means that the game was created successfully.
      */
-    public function createGame($_loginName, $_gameName, $_width, $_height, $_gameNumPlayer)
+    public function createGame($_loginName, $_gameName, $_width, $_height, $_maxPlayer)
     {
-        myLog("GameManager: Creating new ($_width,$_height) game $_gameName for player $_loginName with maxPlayer: $_gameNumPlayer");
+        $this->log->debug("Creating new ($_width,$_height) game $_gameName for player $_loginName with maxPlayer: $_maxPlayer");
 
         if ($this->cache->checkIfGameExists($_gameName))
         {
             $this->backendResult->setResult("Not Ok", "Requested game is already in use!");
-            myLog("Error: The requested game $_gameName is already in use!");
+            $this->log->debug("Error: The requested game $_gameName is already in use!");
             return false;
         }
 
-        $this->cache->createNewGame($_loginName, $_gameName, $_width, $_height, $_gameNumPlayer);
+        $this->cache->createNewGame($_loginName, $_gameName, $_width, $_height, $_maxPlayer);
 
-        $mazeGenerator = new MazeGenerator($_width, $_height, $_gameNumPlayer);
+        $mazeGenerator = new MazeGenerator($_width, $_height, $_maxPlayer);
         $maze = $mazeGenerator->generateMaze();
         for ($y=0; $y < $_height; $y++)
         {
             for ($x=0; $x < $_width; $x++)
             {
                 $currentField = new FieldData($x, $y, $maze[$x][$y]);
-                $fieldKey = $this->rediskaBase."fieldData/$x/$y/serializedFieldData";
-                $this->rediska->set($fieldKey, $currentField);
+                $this->cache->setFieldData($currentField, $_gameName, $x, $y);
             }
         }
         $this->backendResult->setData($maze);
@@ -54,6 +53,7 @@ class GameHandler extends HandlerBase
      */
     public function deleteGame($_loginName, $_gameName)
     {
+        $this->log->debug("Deleting game $_gameName for user $_loginName");
         $this->cache->deleteGame($_loginName, $_gameName);
         $this->backendResult->setResult("OK");
     }
@@ -63,14 +63,13 @@ class GameHandler extends HandlerBase
      */
     public function listGames()
     {
-        $runningGames = new Rediska_Key_List($this->rediskaBase."runningGames");
         $data = new stdClass();
         $data->gameList = array();
-        foreach($runningGames as $runningGame)
+        foreach($this->cache->getRunningGames() as $runningGame)
         {
             $data->gameList[] = $runningGame;
         }
-        myLog("Returning a list of ".count($data->gameList)." running games");
+        $this->log->debug("Returning a list of ".count($data->gameList)." running games");
         $this->backendResult->setData($data);
         $this->backendResult->setResult("OK");
     }
@@ -84,21 +83,30 @@ class GameHandler extends HandlerBase
      */
     public function joinGame($_loginName, $_gameName)
     {
-        $runningGames = new Rediska_Key_List($this->rediskaBase."runningGames");
-        foreach($runningGames as $runningGame)
+        $this->log->debug("Joining game $_gameName for user $_loginName");
+        foreach($this->cache->getRunningGames() as $runningGame)
         {
             if ($_gameName == $runningGame)
             {
                 if ($this->cache->addPlayerToGame($_loginName, $_gameName))
                 {// the game had a free slot and added us
+                    $data = new stdClass();
+                    // create a game session key with which the client can establish a private websocket channel
+                    $data->sessionKey = md5("SECRET_".$_gameName.rand(1,99999).$_loginName."_SECRET");
+                    $this->cache->addGameSessionKeyToStore($_loginName, $data->sessionKey);
+                    $this->backendResult->setData($data);
                     $this->backendResult->setResult("OK");
                     return true;
                 }
-                else $this->backendResult->setResult("Not Ok", "Requested game did not add us!");
+                else
+                {
+                    $this->log->debug("Requested game did not add us!");
+                    $this->backendResult->setResult("Not Ok", "Requested game did not add us!");
+                }
                 return false;
             }
         }
-
+        $this->log->debug("Requested game does not exit anymore!");
         $this->backendResult->setResult("Not Ok", "Requested game does not exit anymore!");
         return false;
     }
@@ -110,12 +118,12 @@ class GameHandler extends HandlerBase
      * @param string $_gameName The name of the game from which the player is removed.
      * @return bool True means that the player was successfully removed from the game.
      */
-    public function quitGame($_loginName, $_gameName)
+    public function disconnectGame($_loginName, $_gameName)
     {
-        if ($this->cache->removePlayerFromGame($_loginName, $_gameName))
-        {
-            return true;
-        }
+        $this->log->debug("Disconnect user $_loginName from game $_gameName");
+        $this->cache->removeGameSessionKeyToStore($_loginName);
+        $this->cache->removePlayerFromGame($_loginName, $_gameName);
+        $this->backendResult->setResult("OK");
         return true;
     }
 

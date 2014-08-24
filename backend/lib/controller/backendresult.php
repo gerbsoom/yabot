@@ -30,7 +30,7 @@ class BackendResult
     }
 
     /**
-     * Sets the generated data and the state to 'OK'.
+     * Sets the generated data.
      *
      * @param mixed $_generatedData The generated data which gets returned to the caller.
      */

@@ -5,9 +5,9 @@
  */
 class HandlerBase
 {
+    /** @var  Monolog\Logger */
+    protected $log;
     protected $cache;
-    protected $rediska;
-    protected $rediskaBase;
     protected $backendResult;
 
     /**
@@ -17,10 +17,9 @@ class HandlerBase
      */
     public function __construct(BackendResult $_backendResult)
     {
-        $this->cache = new RediskaCache();
-        $this->rediska = Rediska_Manager::get();
-        $this->rediskaBase = "botgame/";
+        $this->cache = new CacheController();
         $this->backendResult = $_backendResult;
+        $this->log = LoggerRegistry::getLogger($this);
     }
 
 }

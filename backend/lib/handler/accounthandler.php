@@ -16,17 +16,23 @@ class AccountHandler extends HandlerBase
      */
     public function login($_userName, $_passwordHash)
     {
-        if ($this->cache->checkIfRegisteredUserExists($_userName) == false)
+        if ($this->cache->registeredUserExists($_userName) == false)
         {
+            $this->log->debug("Requested username does not exist!");
             $this->backendResult->setResult("Not OK", "Requested username does not exist!");
         }
         else if ($this->cache->verifyPasswordHash($_userName, $_passwordHash))
         {
+            $this->log->debug("Password verified");
             $this->cache->addLoggedInUser($_userName);
             $this->backendResult->setResult("OK");
             return true;
         }
-        else $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+        else
+        {
+            $this->log->debug("The provided password is not correct!");
+            $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+        }
 
         return false;
     }
@@ -40,16 +46,22 @@ class AccountHandler extends HandlerBase
      */
     public function update($_userName, $_passwordHash, $_newPasswordHash)
     {
-        if ($this->cache->checkIfRegisteredUserExists($_userName) == false)
+        if ($this->cache->registeredUserExists($_userName) == false)
         {
+            $this->log->debug("Requested username does not exist!");
             $this->backendResult->setResult("Not OK", "Requested username does not exist!");
         }
         else if ($this->cache->verifyPasswordHash($_userName, $_passwordHash))
         {
-            $this->cache->updatePasswordHashForUser($_userName, $_newPasswordHash);
+            $this->log->debug("Password verified");
+            $this->cache->updatePasswordHash($_userName, $_newPasswordHash);
             $this->backendResult->setResult("OK");
         }
-        else $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+        else
+        {
+            $this->log->debug("The provided password is not correct!");
+            $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+        }
     }
 
     /**
@@ -61,6 +73,7 @@ class AccountHandler extends HandlerBase
      */
     public function logout($_userName)
     {
+        $this->log->debug("Logging out user $_userName");
         $this->cache->logOutUser($_userName);
         $this->backendResult->setResult("OK");
     }
@@ -73,12 +86,14 @@ class AccountHandler extends HandlerBase
      */
     public function register($_userName, $_passwordHash)
     {
-        if ($this->cache->checkIfRegisteredUserExists($_userName))
+        if ($this->cache->registeredUserExists($_userName))
         {
+            $this->log->debug("Requested username does not exist!");
             $this->backendResult->setResult("Not OK", "Requested username already exists!");
         }
         else
         {
+            $this->log->debug("Creating user account for $_userName");
             $this->cache->createUserAccount($_userName, $_passwordHash);
             $this->backendResult->setResult("OK");
         }
@@ -92,16 +107,22 @@ class AccountHandler extends HandlerBase
      */
     public function delete($_userName, $_passwordHash)
     {
-        if ($this->cache->checkIfRegisteredUserExists($_userName) == false)
+        if ($this->cache->registeredUserExists($_userName) == false)
         {
+            $this->log->debug("Requested username does not exist!");
             $this->backendResult->setResult("Not OK", "Requested username does not exist!");
         }
         else if ($this->cache->verifyPasswordHash($_userName, $_passwordHash))
         {
+            $this->log->debug("Password verified");
             $this->cache->deleteUserAccount($_userName);
             $this->backendResult->setResult("OK");
         }
-        else $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+        else
+        {
+            $this->log->debug("The provided password is not correct!");
+            $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+        }
     }
 
 }

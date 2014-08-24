@@ -6,8 +6,10 @@
  * To avoid problems with session data being en- and decoded in different environments,
  * where clashes might occur, all processed data is wrapped with a JSON-transformation.
  */
-class RedisSessionSaveHandler
+class SessionSaveHandler
 {
+    /** @var Monolog\Logger */
+    private $log;
     /** @var Rediska */
     private $redisCache;
     private $sessionKeyBase;
@@ -25,6 +27,7 @@ class RedisSessionSaveHandler
     {
         $this->redisCache = $_redisCache;
         $this->sessionKeyBase = $_sessionKeyBase;
+        $this->log = LoggerRegistry::getLogger($this);
     }
 
     /**
@@ -34,6 +37,8 @@ class RedisSessionSaveHandler
      */
     public function close()
     {
+        $this->log->debug("Close the session");
+        $this->log->debug("_____________________________________________________________________________________________________");
         return true;
     }
 
@@ -45,6 +50,7 @@ class RedisSessionSaveHandler
      */
     public function destroy($_id)
     {
+        $this->log->debug("Destroy the session with ID: $_id");
         $this->redisCache->delete($this->sessionKeyBase.$_id);
         return true;
     }
@@ -57,6 +63,7 @@ class RedisSessionSaveHandler
      */
     public function gc($maxlifetime)
     {
+        $this->log->debug("Discard gc()");
         return true;
     }
 
@@ -69,8 +76,11 @@ class RedisSessionSaveHandler
      */
     public function open($savePath, $_name)
     {
+        $this->log->debug("_____________________________________________________________________________________________________");
+        $this->log->debug("Open a session for (session) name: $_name");
         $this->sessionName = $_name;
         $this->sessionLifetime = ini_get("session.gc_maxlifetime");
+        $this->log->debug("Setting lifetime to ".$this->sessionLifetime);
         return true;
     }
 
@@ -82,11 +92,15 @@ class RedisSessionSaveHandler
      */
     public function read($_id)
     {
+        $this->log->debug("Read session data for ID $_id");
         $_SESSION = json_decode($this->redisCache->get($this->sessionKeyBase.$_id), true);
         if (isset($_SESSION) && !empty($_SESSION) && $_SESSION != null)
         {// use the stored session from cache
-            return session_encode();
+            $sessionData = session_encode();
+            $this->log->debug("--> Existing session '$sessionData'");
+            return $sessionData;
         }
+        $this->log->debug("--> NEW session");
         // new session
         return "";
     }
@@ -103,6 +117,7 @@ class RedisSessionSaveHandler
      */
     public function write($_id, $_data)
     {
+        $this->log->debug("Writing session data ".json_encode($_SESSION)." to rediska");
         $this->redisCache->setAndExpire($this->sessionKeyBase.$_id,
                                         json_encode($_SESSION),
                                         $this->sessionLifetime);

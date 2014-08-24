@@ -13,7 +13,7 @@ $rediska = new Rediska($options);
 function customAutoLoader($_className)
 {
     $found = false;
-    $dirs = array("controller", "handler", "model", "persistence") ;
+    $dirs = array("controller", "handler", "model", "service", "storage/interface", "storage/rediska", "storage/rediska/model") ;
     foreach ($dirs as $dir)
     {
         $file = __DIR__."/lib/".$dir."/".$_className. '.php';
@@ -24,15 +24,7 @@ function customAutoLoader($_className)
             break;
         }
     }
-    if (!$found) myLog("Not finding class: $_className");
 }
 spl_autoload_register("customAutoLoader");
 
-//$logger = new Monolog\Logger("GLOBAL");
-//$logger->pushHandler(new Monolog\Handler\StreamHandler("d:/logs/botgame.log", Monolog\Logger::DEBUG));
-
-// Replace with Monolog
-function myLog($_message)
-{
-    file_put_contents("d:/logs/botgame.log", date("Y-m-d H:i:s", time())." ".$_message."\n", FILE_APPEND);
-}
+LoggerRegistry::createInstance("d:/logs/botgame_monolog.log", Monolog\Logger::DEBUG);

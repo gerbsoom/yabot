@@ -11,6 +11,8 @@ require_once(__DIR__ . "/../../boot.php");
  */
 class MazeGenerator
 {
+    /** @var Monolog\Logger */
+    private $log;
     private $width;
     private $height;
     private $player;
@@ -50,6 +52,7 @@ class MazeGenerator
      */
     function __construct($_width=16, $_height=16, $_player=2)
     {
+        $this->log = LoggerRegistry::getLogger($this);
         $this->width = $_width;
         $this->height = $_height;
         $this->player = $_player;
@@ -76,6 +79,7 @@ class MazeGenerator
             }
         }
         $this->backupDir = "D:/logs/bg_tmp/";
+        $this->log->debug("Backup directory at: ".$this->backupDir);
     }
 
     /**
@@ -85,7 +89,7 @@ class MazeGenerator
      */
     function setLogDir($_backupDir)
     {
-        myLog("Change backup location to $_backupDir");
+        $this->log->debug("Change backup location to $_backupDir");
         $this->backupDir = $_backupDir;
     }
 
@@ -98,7 +102,7 @@ class MazeGenerator
      */
     function generateMaze()
     {
-        myLog("Generating (".$this->width."x".$this->height.") maze for ".$this->player. " player");
+        $this->log->debug("Generating (".$this->width."x".$this->height.") maze for ".$this->player. " player");
         $cnt = 0;
         $this->createBorder();
         $this->createMiddleField();
@@ -125,7 +129,7 @@ class MazeGenerator
             }
             if ($this->validate())
             {
-                myLog("Battlefield validated after $cnt iterations");
+                $this->log->debug("Battlefield validated after $cnt iterations");
                 break;
             }
             else $cnt++;
@@ -192,7 +196,7 @@ class MazeGenerator
                         $this->battleMaze[$x][$y] = self::FIELD_BLUE_BOT;
                     }
                 }
-                myLog("Player $i starting left_down corner");
+                $this->log->debug("Player $i starting left_down corner");
             }
             else if ($this->playerBases[$i] == "top"){
                 for ($x=1; $x < 4; $x++){
@@ -200,7 +204,7 @@ class MazeGenerator
                         $this->battleMaze[$x][$y] = self::FIELD_BLACK_BOT;
                     }
                 }
-                myLog("Player $i starting top_left corner");
+                $this->log->debug("Player $i starting top_left corner");
             }
             else if ($this->playerBases[$i] == "right"){
                 for ($x=$this->width-4; $x < $this->width-1; $x++){
@@ -208,7 +212,7 @@ class MazeGenerator
                         $this->battleMaze[$x][$y] = self::FIELD_LIGHTBLUE_BOT;
                     }
                 }
-                myLog("Player $i starting right_top corner");
+                $this->log->debug("Player $i starting right_top corner");
             }
             else if ($this->playerBases[$i] == "bottom"){
                 for ($x=$this->width-4; $x < $this->width-1; $x++){
@@ -216,7 +220,7 @@ class MazeGenerator
                         $this->battleMaze[$x][$y] = self::FIELD_LIGHTBLACK_BOT;
                     }
                 }
-                myLog("Player $i starting bottom_right corner");
+                $this->log->debug("Player $i starting bottom_right corner");
             }
         }
     }
@@ -232,7 +236,7 @@ class MazeGenerator
             $posX = rand(4, $this->width-4);
             $posY = rand(4, $this->height-4);
             $this->battleMaze[$posX][$posY] = MazeGenerator::FIELD_RANDOM;
-            myLog("Add random item at pos: ($posX x $posY)");
+            $this->log->debug("Add random item at pos: ($posX x $posY)");
         }
     }
 
@@ -250,7 +254,7 @@ class MazeGenerator
             if ($this->playerBases[$playerId] == "left")
             {
                 $cord = new Coordinate(1, $this->height - 2);
-                if (!$this->middleReachableFrom(array($cord), array(), $playerId))
+                if (!$this->middleReachable(array($cord), array(), $playerId))
                 {
                     return false;
                 }
@@ -258,7 +262,7 @@ class MazeGenerator
             else if ($this->playerBases[$playerId] == "top")
             {
                 $cord = new Coordinate(1, 1);
-                if (!$this->middleReachableFrom(array($cord), array(), $playerId))
+                if (!$this->middleReachable(array($cord), array(), $playerId))
                 {
                     return false;
                 }
@@ -266,7 +270,7 @@ class MazeGenerator
             else if ($this->playerBases[$playerId] == "right")
             {
                 $cord = new Coordinate($this->width - 2, 1);
-                if (!$this->middleReachableFrom(array($cord), array(), $playerId))
+                if (!$this->middleReachable(array($cord), array(), $playerId))
                 {
                     return false;
                 }
@@ -274,7 +278,7 @@ class MazeGenerator
             else if ($this->playerBases[$playerId] == "bottom")
             {
                 $cord = new Coordinate($this->width - 2, $this->height - 2);
-                if (!$this->middleReachableFrom(array($cord), array(), $playerId))
+                if (!$this->middleReachable(array($cord), array(), $playerId))
                 {
                     return false;
                 }
@@ -294,11 +298,11 @@ class MazeGenerator
      * @param int $_playerId The ID of the player for which the check is done.
      * @return bool
      */
-    private function middleReachableFrom($_neighborFields, $_currentPath, $_playerId)
+    private function middleReachable($_neighborFields, $_currentPath, $_playerId)
     {
         if (count($_neighborFields) == 0)
         {// no field left to reach the middle
-            myLog("Player (#$_playerId) Giving up after ".count($this->processedFields)." processed fields");
+            $this->log->debug("Player (#$_playerId) Giving up after ".count($this->processedFields)." processed fields");
             return false;
         }
         /** @var Coordinate $coord */
@@ -308,15 +312,15 @@ class MazeGenerator
         {// entry not processed yet, check if it is a middle field to end or add all valid neighbors for next run
             if (in_array($coord->id(), $this->middlePositions))
             {// well there is a middle field and we can finish with success
-                myLog("Player (#$_playerId) Reach middle after ".count($this->processedFields)." processed fields");
+                $this->log->debug("Player (#$_playerId) Reach middle after ".count($this->processedFields)." processed fields");
                 $stringPath = "PATH=";
-                foreach ($_currentPath as $currentCoord)
+                /*foreach ($_currentPath as $currentCoord)
                 {/** @var Coordinate $currentCoord */
-                    $stringPath .= "[".$currentCoord->id()."]";
+                /*    $stringPath .= "[".$currentCoord->id()."]";
                     // insert the next coordinate of the complete path to the middle (debug purposes)
                     $this->battleMaze[$currentCoord->posX()][$currentCoord->posY()] = $_playerId + 2;
-                }
-                myLog("Path: $stringPath");
+                }*/
+                $this->log->debug("Path: $stringPath");
                 $this->coordPathToMiddle[$_playerId] = $_currentPath;
                 // return the success recursively to validate method
                 return true;
@@ -341,7 +345,7 @@ class MazeGenerator
                 }
             }
         }
-        return $this->middleReachableFrom($_neighborFields, $_currentPath, $_playerId);
+        return $this->middleReachable($_neighborFields, $_currentPath, $_playerId);
     }
 
     /**
@@ -364,7 +368,7 @@ class MazeGenerator
                 }
                 else $currentLine .= "*";
             }
-            myLog(str_pad($y, 2, " ") . ": " . $currentLine);
+            $this->log->debug(str_pad($y, 2, " ") . ": " . $currentLine);
         }
     }
 

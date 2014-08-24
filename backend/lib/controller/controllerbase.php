@@ -1,13 +1,13 @@
 <?php
 
-require_once(__DIR__ . "/../persistence/rediskacache.php");
-
 /**
  * Base class for all controllers which forces to provide a validate and executeAction function.
  */
 abstract class ControllerBase
 {
-    /** @var RediskaCache  */
+    /** @var  Monolog\Logger */
+    protected $log;
+    /** @var CacheController  */
     protected $cache;
     /** @var  BackendResult */
     protected $backendResult;
@@ -22,8 +22,9 @@ abstract class ControllerBase
     function __construct($_params = array())
     {
         $this->params = $_params;
-        $this->cache = new RediskaCache();
+        $this->cache = new CacheController();
         $this->backendResult = new BackendResult($_params);
+        $this->log = LoggerRegistry::getLogger($this);
     }
 
     /**
