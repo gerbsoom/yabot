@@ -1,6 +1,6 @@
 function showAtStatusConsole(_msg, _append)
 {
-    _append=true;
+    //_append=true;
     var d = new Date ();
     var statusMessage = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + " ";
     var statusConsoleTextArea = document.getElementById("statusConsoleTextArea");

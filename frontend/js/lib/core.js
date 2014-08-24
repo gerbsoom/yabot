@@ -1,3 +1,8 @@
+function workerSupport()
+{
+    return typeof(Worker) !== "undefined";
+}
+
 function addElementToComponent(_component, _newElement)
 {
     _component.appendChild(_newElement);

@@ -59,10 +59,7 @@ function generateBattlefieldTabPanel()
     addElementToComponent(rightToolBox, explorerBotButton);
 
     var serverBotButton = addClassAndId(generateButton("serverBotButton", "Add RealGameBot"), "battlefieldButton");
-    serverBotButton.onclick = function ()
-    {
-        addBotToServerGame();
-    }
+    serverBotButton.onclick = onAddBotToServerGame;
     addElementToComponent(rightToolBox, serverBotButton);
 
     /**for (var i=1 ;i<5 ;i++) addElementToComponent(rightToolBox, generateButton("blabka" + i, "TESTButten- Text" + i))*/
@@ -72,6 +69,11 @@ function generateBattlefieldTabPanel()
     addElementToComponent(battlefieldTabPanel, canvasComponent);
 
     return battlefieldTabPanel;
+}
+
+function onAddBotToServerGame()
+{
+    processAddBotToServerGame(getJoinedGame(), "test");
 }
 
 function startLocalExplorerBot(botImages, imageArray)
@@ -87,13 +89,19 @@ function startLocalExplorerBot(botImages, imageArray)
         {
             oldCoordinate = new Coordinate(newCoordinate.getPosX(), newCoordinate.getPosY());
             newCoordinate = new Coordinate(x, y);
-            drawLocalBot(battleField, botImages, imageArray, oldCoordinate, newCoordinate);
+            drawLocalBot(battleField, botImages, imageArray, newCoordinate, oldCoordinate);
             oldCoordinate = newCoordinate;
         }
     }
 }
 
-function drawLocalBot(_battlefield, _botImages, _imageArray, _oldCoord, _newCoord)
+function drawBotAt(_newCoord, _oldCoord)
+{
+    var botImage = createImage("img/bots/explorerbot.png");
+    drawLocalBot(null, botImage , null, _newCoord);
+}
+
+function drawLocalBot(_battlefield, _botImages, _imageArray, _newCoord, _oldCoord)
 {
     if (_oldCoord)
     {// restore old field from cached battlefield

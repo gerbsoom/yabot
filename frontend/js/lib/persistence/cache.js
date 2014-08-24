@@ -2,6 +2,7 @@ var usersKey = "/user/list";
 var joinedGame = "/game/joined";
 var loggedInUser = "/user/loggedIn";
 var createdGamesKey = "/games/created";
+var gameSessionKey = "/game/sessionKey";
 var battlefieldBaseKey = "/games/battlefields/";
 
 function getUsers()
@@ -21,6 +22,16 @@ function setJoinedGame(_joinedGame)
 function getJoinedGame()
 {
     return localStorage.getItem(joinedGame);
+}
+
+function getGameSessionKey()
+{
+    return localStorage.getItem(gameSessionKey);
+}
+
+function setGameSessionKey(_sessionKey)
+{
+    localStorage.setItem(gameSessionKey, _sessionKey);
 }
 
 function getCreatedGames()

@@ -8,6 +8,8 @@
 
         <script type="text/javascript" src="js/botgame.js"></script>
 
+        <!-- Grouping into    ? -->
+
 		<script type="text/javascript" src="js/view/account/login.js"></script>
 		<script type="text/javascript" src="js/view/home.js"></script>
         <script type="text/javascript" src="js/view/header.js"></script>
@@ -45,19 +47,22 @@
         <script type="text/javascript" src="js/lib/network/game.js"></script>
         <script type="text/javascript" src="js/lib/network/battlefield.js"></script>
 
+        <script type="text/javascript" src="js/lib/worker/testworker.js"></script>
+
         <script type="text/javascript" src="js/lib/ui/component/tabpage.js"></script>
         <script type="text/javascript" src="js/lib/ui/component/inputfield.js"></script>
         <script type="text/javascript" src="js/lib/ui/component/selectbox.js"></script>
 
         <script type="text/javascript" src="js/lib/external/md5sum.js"></script>
-		<script type="text/javascript" src="js/lib/external/jquery-2.1.1.js"></script>
+		<script type="text/javascript" src="js/lib/external/jquery-2.1.1.js"></script><!-- only used for AJAX calls -->
         <script type="text/javascript" src="js/lib/external/socket.io/socket.io.js"></script>
 
 	</head>
 	<body>
 		<script>
             setupUI();
-            initWebSocket();
+            <!--initWebSocket();-->
+            <!--startWorker();-->
         </script>
 	</body>
 </html>

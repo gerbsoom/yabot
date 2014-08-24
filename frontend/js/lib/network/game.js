@@ -39,6 +39,27 @@ function processJoinServerGame(_gameName)
     }, checkError);
 }
 
+function processAddBotToServerGame(_gameName, _botId)
+{
+    var userName = getLoggedInUser();
+    var botId = "test";
+    var postData =
+    {
+        loginName : userName,
+        gameName : _gameName,
+        botId:    botId,
+        controller : "game",
+        action : "addBot"
+    }
+    doPostRequest(getServerUrl(), "POST", postData, "JSON", function(data)
+    {
+        if (checkResult(data))
+        {
+            handleAddBot(data);
+        }
+    }, checkError);
+}
+
 function processGetGameInfo(_gameName)
 {
     var userName = getLoggedInUser();
