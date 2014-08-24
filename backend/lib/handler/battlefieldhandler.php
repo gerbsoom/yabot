@@ -1,7 +1,5 @@
 <?php
 
-require_once("handlerbase.php");
-
 /**
  * Executes the battlefield operations which get dispatched here by the battlefield controller.
  */
@@ -69,6 +67,26 @@ class BattlefieldHandler extends HandlerBase
         else $field = new FieldData($_posX, $_posY);
         $this->backendResult->setResult("OK");
         $this->backendResult->setData($field);
+    }
+
+    public function addBot($_loginName, $_botId, $_gameName)
+    {
+        // add the given bot to the game after doing following checks: gameExists - userLoggedIn - numBots < numMax
+        $this->cache->addBotToGame($_botId, $_gameName);
+        $data = new stdClass();
+        // create a session key with which the client can establish a private websocket channel
+        $data->sessionKey = "SECRET_12345_SECRET";
+        $this->cache->addSessionKeyToStore($_loginName, $data->sessionKey);
+        // get the player values colors/ID/startbase with which the bot will play
+        $data->playerId = 1;
+        // get the amount of used player IDs in the game
+        $data->numPlayer = 1;
+        // get the current position of the bot on the battlefield
+        $data->posX = 30;
+        $data->posY = 2;
+
+        $this->backendResult->setData($data);
+        $this->backendResult->setResult("OK");
     }
 
 }

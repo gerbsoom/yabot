@@ -10,8 +10,8 @@ class ComponentManager
     public function getValidCommands()
     {
         return array("account"=>array("actions"=>array("register", "login", "logout", "selectServer"), "params"=>array("loginName", "passwordHash", "server")),
-                     "game"=>array("actions"=>array("createGame", "joinGame", "deleteGame", "listGames", "sendMessage"), "params"=>array("loginName", "gameName", "chatMessage", "gameWidth", "gameHeight", "gameNumPlayer")),
-                     "battlefield"=>array("actions"=>array("getCurrentBattlefieldState"), "params"=>array("loginName", "gameName"))
+                     "game"=>array("actions"=>array("createGame", "joinGame", "deleteGame", "listGames", "sendMessage"), "params"=>array("loginName", "gameName", "gameWidth", "gameHeight", "gameNumPlayer")),
+                     "battlefield"=>array("actions"=>array("getCurrentBattlefieldState", "getFieldState", "addBot"), "params"=>array("loginName", "gameName", "botId", "posX", "posY"))
                     );
     }
 }

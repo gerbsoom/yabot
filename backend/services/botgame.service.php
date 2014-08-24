@@ -1,49 +1,33 @@
 <?php
 
+/**
+ * Background service which creates initial cache entries and cleans up cyclically sessions and leaked games.
+ */
+
 require_once(__DIR__ . "/../boot.php");
 require_once(__DIR__ . "/../lib/persistence/rediskacache.php");
 
-$rediska = Rediska_Manager::get();
-$cache = new RediskaCache();
-
 $rediskaBase = "botgame/";
-// ensure existing of the base key
-if (!$rediska->exists($rediskaBase))
-{
-    myLog("Initially create cache key at: ".$rediskaBase);
-    $rediska->set($rediskaBase);
-}
-// quick list containing all running games
-if (!$rediska->exists($rediskaBase."runningGames"))
-{
-    myLog("Initially create cache LIST key at: ".$rediskaBase."runningGames");
-    new Rediska_Key_List($rediskaBase."runningGames");
-}
-// quick list containing all known users
-if (!$rediska->exists($rediskaBase."knownUsers"))
-{
-    myLog("Initially create cache LIST key at: ".$rediskaBase."knownUsers");
-    new Rediska_Key_List($rediskaBase."knownUsers");
-}
+$cache = new RediskaCache();
+$rediska = Rediska_Manager::get();
 
-$endLoop = false;
+$neededCacheKeys = array("keys" => array($rediskaBase, $rediskaBase."sessionKeys/"));
 
-while(!$endLoop)
-{
-    mylog("SERVICE: Cyclically check for user that are timed out");
-    // check for logged in users that are currently timed out
-    foreach ($cache->getLoggedInUsers() as $loggedInUser)
+foreach ($neededCacheKeys["keys"] as $neededCacheKey)
+{// ensure the existence of all needed keys
+    if (!$rediska->exists($neededCacheKey))
     {
-        myLog("Checking logged in $loggedInUser: ");
-        if ($cache->sessionTimedOut($loggedInUser))
-        {
-            myLog("SERVICE: Logging out $loggedInUser because of session timeout");
-            $cache->logOutUser($loggedInUser);
-        }
+        myLog("Initially create cache key at: ".$neededCacheKey);
+        $rediska->set($neededCacheKey);
     }
+}
+
+while(true)
+{
+    mylog("SERVICE: Cyclically check for timed out user sessions and outdated games");
+
     foreach ($cache->getKnownUsers() as $knownUser)
     {
-        myLog("Checking known usrt $knownUser: ");
         if ($cache->sessionTimedOut($knownUser))
         {
             myLog("SERVICE: Logging out $knownUser because of session timeout");
@@ -51,29 +35,31 @@ while(!$endLoop)
         }
     }
 
-    mylog("SERVICE: Cyclically check for outdated games without players");
-    // old games will be deleted if no one uses them anymore
     foreach ($cache->getRunningGames() as $runningGame)
-    {
-        myLog("Checking running game $runningGame: ");
-        $baseKey = "botgame/".$runningGame."/";
-        $owner = $rediska->get($baseKey."owner");
-        myLog("-->Owner: ".$owner);
-        $playerList = new Rediska_Key_List($baseKey."playerList");
-        $playerCount = count($playerList);
-        myLog("-->PlayerCount: ".$playerCount);
-        $lastActivity = $rediska->get($baseKey."lastActivity");
-        if ($playerCount == 0 ||                                        // no players in the game
-           ($playerCount == 1 && $lastActivity + 43200 < time()) ||     // one player for 12h AFK
-           ($lastActivity + (4*43200) < time()))                        // arbitrary  but 2d AFK!
+    {// old games will be deleted if no one uses them anymore
+        if ($rediska->exists($rediskaBase.$runningGame))
         {
-            myLog("Deleting old game");
-            $cache->deleteGame($owner, $runningGame);
+            myLog("Checking running game $runningGame in detail");
+            $baseKey = "botgame/".$runningGame."/";
+            $owner = $rediska->get($baseKey."owner");
+            $playerList = new Rediska_Key_List($baseKey."playerList");
+            $playerCount = count($playerList);
+            $lastActivity = $rediska->get($baseKey."lastActivity");
+            myLog("--> PlayerCount: ".$playerCount." Owner: ".$owner);
+            if ($playerCount == 0 ||                                        // no players in the game
+               ($playerCount == 1 && $lastActivity + 43200 < time()) ||     // one player for 12h AFK
+               ($lastActivity + (4*43200) < time()))                        // arbitrary  but 2d AFK!
+            {
+                myLog("Deleting old game $runningGame");
+                $cache->deleteGame($owner, $runningGame);
+            }
         }
-
+        else
+        {
+            myLog("Game does not exist in cache anymore, do a cleanup");
+            $bogusList = new Rediska_Key_List($rediskaBase."runningGames");
+            $bogusList->remove($runningGame);
+        }
     }
-
-    mylog("SERVICE: Going to sleep for 10 minutes");
-    sleep(600);
+    sleep(30);
 }
-

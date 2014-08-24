@@ -1,6 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../model/backendresult.php");
 require_once(__DIR__ . "/../persistence/rediskacache.php");
 
 /**
@@ -8,7 +7,7 @@ require_once(__DIR__ . "/../persistence/rediskacache.php");
  */
 abstract class ControllerBase
 {
-    /** @var \RediskaCache  */
+    /** @var RediskaCache  */
     protected $cache;
     /** @var  BackendResult */
     protected $backendResult;

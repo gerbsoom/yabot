@@ -1,8 +1,5 @@
 <?php
 
-require_once("controllerbase.php");
-require_once(__DIR__ . "/../handler/gamehandler.php");
-
 /**
  * Offers actions to manage games.
  */
@@ -25,14 +22,6 @@ class GameController extends ControllerBase
                 return true;
             }
         }
-        else if ($action == "addBot")
-        {
-            if (isset($this->params["gameName"]) && isset($this->params["loginName"]) && isset($this->params["botId"]))
-            {
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -44,7 +33,7 @@ class GameController extends ControllerBase
         $action = $this->params["action"];
         $gameName = $this->params["gameName"];
         $loginName = $this->params["loginName"];
-       if ($this->cache->sessionTimedOut($loginName, $this->maxSessionTimeout))
+        if ($this->cache->sessionTimedOut($loginName, $this->maxSessionTimeout))
         {
             $this->backendResult->setResult("Not Ok", "Session was timed out!");
         }
@@ -70,7 +59,6 @@ class GameController extends ControllerBase
                 else if ($action == "deleteGame")
                 {
                     myLog("Deleting existing game $gameName for user $loginName");
-                    // toDo: Check if game really exists
                     $gameHandler->deleteGame($loginName, $gameName);
                 }
                 else if ($action == "joinGame")
@@ -87,11 +75,6 @@ class GameController extends ControllerBase
                 {
                     myLog("Listing existing games for user $loginName");
                     $gameHandler->listGames();
-                }
-                else if ($action == "addBot")
-                {
-                    myLog("Adding bot ".$this->params["botId"]." to game $gameName for user $loginName");
-                    $gameHandler->addBot($loginName, $this->params["botId"], $gameName);
                 }
             }
             else

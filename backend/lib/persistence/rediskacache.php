@@ -10,6 +10,7 @@ class RediskaCache
     /** @var Rediska */
     private $rediska;
     private $rediskaBase;
+    private $sessionKeyHash;
     private $loggedInUsersList;
     private $registeredUserList;
 
@@ -22,6 +23,8 @@ class RediskaCache
     {
         $this->rediskaBase = $_rediskaBase;
         $this->rediska = Rediska_Manager::get();
+        $this->sessionKeyHash = "botgame/sessionKeyHash";
+        new Rediska_Key_Hash($this->sessionKeyHash);
         $this->knownUsers = $this->rediskaBase."knownUsers";
         $this->loggedInUsersList = $this->rediskaBase."loggedInUsers";
     }
@@ -34,6 +37,7 @@ class RediskaCache
      */
     public function checkIfRegisteredUserExists($_userName)
     {
+        //$this->rediska->exists($this->rediskaBase."registeredPlayer/testtest");
         if ($this->rediska->exists($this->rediskaBase."registeredPlayer/$_userName"))
         {
             return true;
@@ -362,6 +366,13 @@ class RediskaCache
         $botList = new Rediska_Key_List($this->rediskaBase.$_gameName."/botList");
         // maybe there will be some criteria if a bot is allowed to join
         $botList[] = $_botId;
+    }
+
+    public function addSessionKeyToStore($_loginName, $_sessionKey)
+    {
+        myLog("Add session key to store '$_sessionKey' for user $_loginName");
+        $sessionKeyStore = new Rediska_Key_Hash($this->sessionKeyHash);
+        $sessionKeyStore[$_loginName] = $_sessionKey;
     }
 
 }

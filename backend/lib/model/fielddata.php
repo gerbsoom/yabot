@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/bot.php");
-
 /**
  * Represents a single tile (wall or free field) on the battlefield.
  */

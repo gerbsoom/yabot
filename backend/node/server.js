@@ -1,13 +1,15 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
-var _redis = require("redis");
-var redis = _redis.createClient();
 
+var redis = require("redis");
+//var redisutil = require('./myredisutil.js');
+var redisSessionKey = "botgame/sessionKeyHash";
+
+// this one is hardcoded for now
 app.listen(8080);
 
-var clients = [];
-
+// we offer an echo service and also do gently greet arbitrary websocket clients
 function handler (req, res) {
     fs.readFile(__dirname + '/index.html',
         function (err, data) {
@@ -21,39 +23,51 @@ function handler (req, res) {
         });
 }
 
-io.on('connection', function (socket) {
-    clients.push(socket);
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-        console.log(data);
+// for clients that have joined a game and added a bot
+// battlefield changes will be populated to all clients
+var clients = [];
+
+// Stores the available session keys together with the unique user login as index
+// on validated user requests we will trigger the corresponding methods and return
+var sessionKeys;
+
+io.on('connection', function (socket)
+{
+    console.log("Connection coming in...");
+    cyclicRedisCheckSet();
+    // normal operation is to echo alive state and wait for a 'provideSessionKey' challenge
+    socket.emit('echo', { state: "alive" });
+    // check if the client has a valid session key to be added in clients
+    if (false)
+    {// maybe this will only work with a specific 'provideSessionKey'-Event
+        console.log("Socket added");
+        clients.push(socket);
+    }
+    socket.on("provideSessionKey", function (data)
+    {// check for a valid session key to establish a new channel
+        console.log(data.sessionKey);
+        if (sessionKeys[data.loginName] === data.sessionKey)
+        {
+            clients.push(socket);
+            console.log("Privileged client channel is established");
+            socket.emit('PrivilegedChannel', { state: "established" });
+        }
+        else console.log("Unknown or invalid session key");
     });
 });
 
-incKey(1);
-
-function cyclicRedisCheck()
+function cyclicRedisCheckSet()
 {
-    redis.get("test", function(error, result) {
-        if (error) console.log('Error: '+ error);
-        else
+    var client = redis.createClient();
+    client.hgetall(redisSessionKey, function (err, obj) {
+        if (obj == undefined || !obj || obj == null || obj == 'undefined')
         {
-            console.log('Name: ' + result);
-            for (var i=0; i < clients.length; i++)
-            {
-                clients[i].emit('news', { hello: result });
-            }
-            incKey(parseInt(result) + 1);
+            console.log("Prevent session keys from beeing destroyed");
         }
+        else sessionKeys = obj;
     });
+    client.quit();
+    //console.dir(sessionKeys);
 }
 
-function incKey(_value)
-{
-    redis.set('test', _value, function(error, result) {
-        if (error) console.log('Error: ' + error);
-        else console.log('Saved');
-    });
-}
-
-setInterval(cyclicRedisCheck, 60000);
-
+setInterval(cyclicRedisCheckSet, 2500);

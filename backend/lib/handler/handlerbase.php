@@ -1,10 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../../boot.php");
-require_once(__DIR__ . "/../model/fielddata.php");
-require_once(__DIR__ . "/../model/backendresult.php");
-require_once(__DIR__ . "/../persistence/rediskacache.php");
-
 /**
  * Base class for all handlers to setup some stuff which is needed everywhere.
  */

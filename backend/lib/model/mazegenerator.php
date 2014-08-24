@@ -1,7 +1,6 @@
 <?php
 
 require_once(__DIR__ . "/../../boot.php");
-require_once(__DIR__ . "/coordinate.php");
 
 /**
  * Generates a battlefield with the provided parameters for a new bot game.

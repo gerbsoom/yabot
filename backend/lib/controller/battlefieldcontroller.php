@@ -1,8 +1,5 @@
 <?php
 
-require_once("controllerbase.php");
-require_once(__DIR__ . "/../handler/battlefieldhandler.php");
-
 /**
  * Offers actions to interact with the battlefield.
  */
@@ -27,6 +24,13 @@ class BattlefieldController extends ControllerBase
                     return true;
                 }
             }
+            else if ($action == "addBot")
+            {
+                if (isset($this->params["loginName"]) && isset($this->params["botId"]))
+                {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -37,19 +41,20 @@ class BattlefieldController extends ControllerBase
     public function executeAction()
     {
         $action = $this->params["action"];
-        if ($this->cache->sessionTimedOut($this->params["loginName"], $this->maxSessionTimeout))
+        $gameName = $this->params["gameName"];
+        $loginName = $this->params["loginName"];
+        if ($this->cache->sessionTimedOut($loginName, $this->maxSessionTimeout))
         {
             $this->backendResult->setResult("Not Ok", "Session was timed out!!");
         }
         else
         {
-            $this->cache->updateLastActivity($this->params["loginName"], "battlefield::$action");
             // we have to check here if the user is really logged in...
-            if ($this->cache->isUserLoggedIn($this->params["loginName"]))
+            if ($this->cache->isUserLoggedIn($loginName))
             {// and that the game still exists
-                if ($this->cache->checkIfGameExists($this->params["gameName"]))
+                if ($this->cache->checkIfGameExists($gameName))
                 {
-                    $battleFieldHandler = new BattlefieldHandler( $this->backendResult, $this->params["gameName"]);
+                    $battleFieldHandler = new BattlefieldHandler( $this->backendResult, $gameName);
                     if ($action == "getCurrentBattlefieldState")
                     {
                         $battleFieldHandler->getCurrentState();
@@ -58,6 +63,12 @@ class BattlefieldController extends ControllerBase
                     {
                         $battleFieldHandler->getFieldState($this->params["posX"], $this->params["posY"]);
                     }
+                    else if ($action == "addBot")
+                    {
+                        myLog("Adding bot ".$this->params["botId"]." to game $gameName for user $loginName");
+                        $battleFieldHandler->addBot($loginName, $this->params["botId"], $gameName);
+                    }
+                    $this->cache->updateLastActivity($loginName, "battlefield::$action");
                 }
                 else
                 {
@@ -67,7 +78,7 @@ class BattlefieldController extends ControllerBase
             }
             else
             {
-                myLog("Someone called backend action [battlefield::".$this->params["action"]."] without being authenticated");
+                myLog("Someone called backend action [battlefield::".$action."] without being authenticated");
                 $this->backendResult->setResult("Not Ok", "You must be logged in to proceed!");
             }
         }

@@ -1,8 +1,5 @@
 <?php
 
-require_once("handlerbase.php");
-require_once(__DIR__ . "/../model/mazegenerator.php");
-
 /**
  * Executes the game operations which get dispatched here by the game controller.
  */
@@ -120,11 +117,6 @@ class GameHandler extends HandlerBase
             return true;
         }
         return true;
-    }
-
-    public function addBot($_loginName, $_botId, $_gameName)
-    {
-
     }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-require_once("handlerbase.php");
-
 /**
  * Executes the account operations which get dispatched here by the account controller.
  *
@@ -14,6 +12,7 @@ class AccountHandler extends HandlerBase
      *
      * @param string $_userName The user that gets logged in if the password hash can be verified.
      * @param string $_passwordHash The hash used for password verification.
+     * @return bool True means that the user is logged in.
      */
     public function login($_userName, $_passwordHash)
     {
@@ -25,8 +24,11 @@ class AccountHandler extends HandlerBase
         {
             $this->cache->addLoggedInUser($_userName);
             $this->backendResult->setResult("OK");
+            return true;
         }
         else $this->backendResult->setResult("Not OK", "The provided password is not correct!");
+
+        return false;
     }
 
     /**

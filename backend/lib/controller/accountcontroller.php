@@ -1,8 +1,5 @@
 <?php
 
-require_once("controllerbase.php");
-require_once(__DIR__ . "/../handler/accounthandler.php");
-
 /**
  * Offers actions to manage a user account.
  */
@@ -61,14 +58,16 @@ class AccountController extends ControllerBase
         }
         else if ($action == "login")
         {
+            $loggedIn = false;
             myLog("Login into account for user".$this->params["loginName"]);
             if ($this->cache->isUserLoggedIn($this->params["loginName"]))
             {// toDo: Play with OK/Not Ok and get the frontend to handle both cases better
                 $this->backendResult->setResult("Not Ok", "Not possible to login when already logged in!");
+                $loggedIn = true;
             }
-            else $accountHandler->login($this->params["loginName"], $this->params["passwordHash"]);
+            else $loggedIn = $accountHandler->login($this->params["loginName"], $this->params["passwordHash"]);
 
-            $this->cache->updateLastActivity($this->params["loginName"], "account::".$this->params["action"]);
+            if ($loggedIn) $this->cache->updateLastActivity($this->params["loginName"], "account::".$this->params["action"]);
         }
         else if ($action == "logout")
         {
