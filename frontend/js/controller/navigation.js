@@ -1,8 +1,12 @@
 /**
  * 0: Home
  * 1: Account
- * 2: Game (needs a choosen server and to be logged in)
- *
+ * L: ______________
+ * 2: Game
+ * 3: Battlefield
+ * 4: BotLab
+ * 5: Administration
+ * 6: closed-tab
  */
 tabCounter = 0;
 activeTab = -1;
@@ -13,6 +17,18 @@ function showTabPanel(_tabNum)
     if (activeTab == _tabNum) return;
     else
     {
+        console.log(getLoggedInUser());
+        if (_tabNum > 1 && getLoggedInUser() == "null")
+        {
+            showAtStatusConsole("Please login first...");
+            console.log("closed: " + _tabNum);
+            _tabNum = 6;
+        }
+        if (_tabNum == 2)
+        {
+            showAtGameConsole(getJoinedGame(), "", false);
+        }
+
         var newReference = tabPanels[_tabNum];
         if (activeTab != -1)
         {
@@ -20,6 +36,7 @@ function showTabPanel(_tabNum)
             contentPanel.replaceChild(newReference, oldReference);
         }
         else contentPanel.appendChild(newReference);
+
     }
     activeTab = _tabNum;
 }

@@ -16,3 +16,25 @@ function processGetCurrentBattlefieldState(_gameName)
         }
     }, checkError);
 }
+
+function processAddBotToServerGame()
+{
+    var gameName = getJoinedGame();
+    var userName = getLoggedInUser();
+    var botId = "test";
+    var postData =
+    {
+        loginName : userName,
+        gameName : gameName,
+        botId:    botId,
+        controller : "battlefield",
+        action : "addBot"
+    }
+    doPostRequest(getServerUrl(), "POST", postData, "JSON", function(data)
+    {
+        if (checkResult(data))
+        {
+            handleAddBot(data);
+        }
+    }, checkError);
+}

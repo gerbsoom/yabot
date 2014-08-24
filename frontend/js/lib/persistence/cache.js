@@ -24,9 +24,19 @@ function getJoinedGame()
     return localStorage.getItem(joinedGame);
 }
 
+function deleteJoinedGame()
+{
+    return localStorage.removeItem(joinedGame);
+}
+
 function getGameSessionKey()
 {
     return localStorage.getItem(gameSessionKey);
+}
+
+function deleteGameSessionKey()
+{
+    return localStorage.removeItem(gameSessionKey);
 }
 
 function setGameSessionKey(_sessionKey)
@@ -77,7 +87,11 @@ function addCreatedGame(_createdGame)
 
 function getLoggedInUser()
 {
-    return localStorage.getItem(loggedInUser);
+    if (localStorage.getItem(loggedInUser) !== null)
+    {
+        return localStorage.getItem(loggedInUser);
+    }
+    return null;
 }
 
 function setLoggedInUser(_userName)
@@ -135,6 +149,5 @@ function getBattleFielData(_gameName)
             result[x][y] = localStorage.getItem(gameBaseKey+"data/"+x+"/"+y);
         }
     }
-    console.log(result);
     return result;
 }

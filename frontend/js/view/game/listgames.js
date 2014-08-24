@@ -12,16 +12,25 @@ function generateListGamesPanel()
     var serverGamesComboBox = addClassAndId(createComboBox(), "selectBox-style-medium", "serverGamesComboBox");
     addElementToComponent(generateListGamesPanel, serverGamesComboBox);
 
-    var gameInfoButton = addClassAndId(generateButton("GameInfoButton", "Get Game Info"), "gameMenuButtons", "GameInfoButton");
-    gameInfoButton.onclick = function()
+    var disconnectGameButton = addClassAndId(generateButton("disconnectGameButton", "Disconnect Game"), "gameMenuButtons", "disconnectGameButton");
+    disconnectGameButton.onclick = function()
     {
         var gameSelectionBox = document.getElementById("serverGamesComboBox");
         var selectedGame = gameSelectionBox.options[gameSelectionBox.selectedIndex].text;
-        processGetGameInfo(selectedGame);
+        processDisconnectGame(selectedGame);
     }
-    addElementToComponent(generateListGamesPanel, gameInfoButton);
+    addElementToComponent(generateListGamesPanel, disconnectGameButton);
 
-    var joinServerGameButton = addClassAndId(generateButton("joinServerGameButton", "Connect to a Game"), "gameMenuButtons", "joinServerGameButton");
+    /**var deleteGameButton = addClassAndId(generateButton("deleteGameButton", "Delete Game"), "deleteGameButton", "deleteGameButton");
+    deleteGameButton.onclick = function()
+    {
+        var gameSelectionBox = document.getElementById("serverGamesComboBox");
+        var selectedGame = gameSelectionBox.options[gameSelectionBox.selectedIndex].text;
+        processDeleteGame(selectedGame);
+    }
+    addElementToComponent(generateListGamesPanel, deleteGameButton);*/
+
+    var joinServerGameButton = addClassAndId(generateButton("joinServerGameButton", "Connect to Game"), "gameMenuButtons", "joinServerGameButton");
     joinServerGameButton.onclick = function()
     {
         var gameSelectionBox = document.getElementById("serverGamesComboBox");
@@ -33,7 +42,7 @@ function generateListGamesPanel()
     var tinyGameConsolePanel = generateDiv("tinyGameConsolePanel", "tinyGameConsolePanel");
 
     var tinyGameConsole = generateDiv("tinyGameConsole", "tinyGameConsole");
-    var tinyConsoleTextArea = addClassAndId(createTextArea(""), "tinyConsoleTextArea", "tinyConsoleTextArea");
+    var tinyConsoleTextArea = addClassAndId(createTextArea("init..."), "tinyConsoleTextArea", "tinyConsoleTextArea");
     addElementToComponent(tinyGameConsole, tinyConsoleTextArea);
 
     var tinyConsoleButton = addClassAndId(generateButton("tinyConsoleButton", "Send ChatMessage/Execute Command"), "tinyConsoleButton");

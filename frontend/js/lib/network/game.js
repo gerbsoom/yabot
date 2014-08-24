@@ -39,28 +39,26 @@ function processJoinServerGame(_gameName)
     }, checkError);
 }
 
-function processAddBotToServerGame(_gameName, _botId)
+function processDisconnectGame(_gameName)
 {
     var userName = getLoggedInUser();
-    var botId = "test";
     var postData =
     {
         loginName : userName,
         gameName : _gameName,
-        botId:    botId,
         controller : "game",
-        action : "addBot"
+        action : "disconnectGame"
     }
     doPostRequest(getServerUrl(), "POST", postData, "JSON", function(data)
     {
         if (checkResult(data))
         {
-            handleAddBot(data);
+            handleDisconnectGame(data);
         }
     }, checkError);
 }
 
-function processGetGameInfo(_gameName)
+function processDeleteGame(_gameName)
 {
     var userName = getLoggedInUser();
     var postData =
@@ -68,13 +66,13 @@ function processGetGameInfo(_gameName)
         loginName : userName,
         gameName : _gameName,
         controller : "game",
-        action : "gameInfo"
+        action : "deleteGame"
     }
     doPostRequest(getServerUrl(), "POST", postData, "JSON", function(data)
     {
         if (checkResult(data))
         {
-            handleJoinGame(data);
+            handleDeleteGame(data);
         }
     }, checkError);
 }

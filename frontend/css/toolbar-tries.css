@@ -184,8 +184,8 @@ ___________________________________________________________
 {
     /*position:relative;
     z-index:2;*/
-    height:255px;
-    width:250px;
+    height:240px;
+    width:233px;
     color: #0a00ab;
     font: normal 1em Consolas, monospace;
     background: transparent;
@@ -211,7 +211,7 @@ ___________________________________________________________
     position:relative;
     z-index:1;
     height:100px;
-    width:244px;
+    width:233px;
     color: #0a00ab;
     font: normal 1em Consolas, monospace;
     background: transparent;

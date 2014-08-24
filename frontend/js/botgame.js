@@ -1,6 +1,9 @@
 function setupUI()
 {
-    var viewConstructors = [generateHomeTabPanel(), generateAccountTabPanel(), generateGameTabPanel(), generateBattlefieldTabPanel(), generateBotLabTabPanel(), generateAdministrationTabPanel()];
+    var viewConstructors = [generateHomeTabPanel(), generateAccountTabPanel(), generateGameTabPanel(),
+                            generateBattlefieldTabPanel(), generateBotLabTabPanel(),
+                            generateAdministrationTabPanel(), generateClosedTabPanel()
+                           ];
     var pages = ["Home", "Account", "Game", "Battlefield", "Botlab", "Administration"];
 
     var navigation = generateNavigation(generateNavigationConfigArray(pages));
@@ -34,30 +37,23 @@ function initWebSocket()
 function initWebSocketGameChannel(_sessionKey)
 {
     var socket = io('http://localhost:8080');
+    socket.emit("provideSessionKey", { loginName: getLoggedInUser(), sessionKey: _sessionKey });
     socket.on('echo', function (data) {
         console.log(data);
         showAtStatusConsole("Echo message from Server: " + data.state, false);
-        socket.emit("provideSessionKey", { loginName: getLoggedInUser(), sessionKey: _sessionKey });
     });
     socket.on("PrivilegedChannel", function (data)
     {
-        showAtStatusConsole("Websocket Game channel established", false);
-        // we are allowed to execute new command to explore the battlefield and fight other bots
+        var message = "Websocket Game channel established";
+        showAtStatusConsole(message, false);
+        showAtGameConsole(getJoinedGame(), message, false);
     });
-}
-
-function startWorker()
-{
-    if (workerSupport())
+    socket.on("GameUpdate", function (data)
     {
-       /** w = new Worker("http://localhost/botgame/frontend/js/lib/worker/testworker.js");
-        var theWorker = new Worker ("web-worker.js");
-        theWorker.addEventListener ("message", onMessage, true);
-        theWorker.addEventListener ("error", onError, true);
-
-        // Daten, die wir an den Worker übergeben
-        var data = "Ein Hallo von Worker ";
-        theWorker.postMessage(data);*/
-    }
-    else console.log("Webworker not supported!");
+        var message = "[" + data.botId + "] moves to (" + data.posX + "," + data.posY + ")";
+        var gameName = getJoinedGame();
+        showAtGameConsole(gameName, message, false);
+        console.log("GameUpdate");
+        drawBotAt(data.botId, new Coordinate(data.posX, data.posY), getCurrentBotPos(data.botId), getBattleFielData(getJoinedGame()));
+    });
 }
