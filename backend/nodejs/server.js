@@ -94,4 +94,4 @@ function checkGameDataChanges()
 }
 
 setInterval(reloadSessionKeys, 2500);
-setInterval(checkGameDataChanges, 500);
+setInterval(checkGameDataChanges, 2000);
