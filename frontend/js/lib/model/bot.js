@@ -6,124 +6,158 @@
  * This credential is generated in the backend and populated here over the nodejs server.
  * This allows the bot to directly communicate over the websocket protocol with the server.
  *
- * @param _id
- * @param userId
- * @param _posX
- * @param _posY
- * @param _roundTime
+ * @param _botId
+ * @param _maze
+ * @param _startPosX
+ * @param _startPosY
  * @constructor
  */
-function Bot(_id, userId, _posX, _posY, _roundTime)
+function Bot(_botId, _maze, _startPosX, _startPosY)
 {
-    this.id = _id;
-    this.posX = _posX;
-    this.posY = _posY;
-    this.userId = userId;
-    this.energy = 100000;
-    this.timeLeft = 3000;
+    var maze = _maze;
+    var botId = _botId;
+    var maxEnergy = 4000;
+    var energyLeft = 4000;
+    var posX = _startPosX;
+    var posY = _startPosY;
+    var width = maze.getWidth();
+    var height = maze.getHeight();
 
-    this.basicTimeCosts =
-    {// All times in miliseconds
+    var battleField = getBattleFielData(maze.getGameName());
+    maze.addTravelledCoordinates(new Coordinate(posX, posY));
+    drawImageAtPos(loadedImages[10], new Coordinate(posX, posY));
+
+    var actionCosts =
+    {
         "moveADefaultField":"500",
-        "exploreNeighborField":"500",
-        "aimAt":"250",  // depends on enemy range
-        "attack":"750", // melee not equal to range
-        "defense":1000
+        "exploreField":"200",
+        "attack":"1000"
     };
 
-    this.makeTheMove = function()
+    this.setRoundEnergy = function(_newRoundEnergy)
     {
-        while (this.timeLeft)
+        maxEnergy = _newRoundEnergy;
+    };
+
+    this.processRound = function()
+    {
+        energyLeft = maxEnergy;
+        nextMove();
+    };
+
+    var isValidMove = function(_coordinate)
+    {
+        return  _coordinate.getPosX() > 0 && _coordinate.getPosX() < width - 1 &&
+                _coordinate.getPosY() > 0 && _coordinate.getPosY() < height - 1 &&
+                maze.getFieldData(_coordinate.getPosX(), _coordinate.getPosY()) < 6;
+    };
+
+    var nextMove = function()
+    {
+        if (energyLeft > 0)
         {
-           if (this.timeLeft < 0)
-           {
-               alert("BotMove finished!!!");
-               return new Coordinate(this.x, this.y);
-           }
+            // first explore all fields around us that are not yet explored
+            if (!maze.isFieldExplored(posX - 1, posY)) exploreField(posX - 1, posY);
+            else if (!maze.isFieldExplored(posX + 1, posY)) exploreField(posX + 1, posY);
+            else if (!maze.isFieldExplored(posX, posY - 1)) exploreField(posX, posY - 1);
+            else if (!maze.isFieldExplored(posX, posY + 1)) exploreField(posX, posY + 1);
+            else
+            {
+                //console.log("All fields around explored...let's move ahead");
+                var newCoord;
+                var validMoves = [];
+                var possibleMoves = [
+                    new Coordinate(posX - 1, posY),
+                    new Coordinate(posX + 1, posY),
+                    new Coordinate(posX, posY + 1),
+                    new Coordinate(posX, posY - 1)
+                ];
+                for (var i=0; i < possibleMoves.length; i++)
+                {
+                    if (isValidMove(possibleMoves[i])) validMoves.push(possibleMoves[i]);
+                }
+                if (validMoves.length == 1) newCoord = validMoves[0];
+                else
+                {
+                    //console.log("More than one (" + validMoves.length + ") valid move left...");
+                    var preferedMoves = [];
+                    for (var i2=0; i2<validMoves.length; i2++)
+                    {
+                        if (!maze.isFieldProcessed(validMoves[i2].getPosX(), validMoves[i2].getPosY()))
+                        {
+                            preferedMoves.push(validMoves[i2]);
+                        }
+                    }
+                    var randomMoves = [];
+                    if (preferedMoves.length == 1) newCoord = preferedMoves[0];
+                    else
+                    {
+                        //console.log("More than one (" + preferedMoves.length + ") preferred move left...");
+                        if (preferedMoves.length > 1) randomMoves = preferedMoves;
+                        else randomMoves = validMoves;
 
-            var rand = Math.floor((Math.random() * 10) + 1);
-            if (rand < 3) this.moveToPos(_posX + 1, _posY);
-            else if (rand < 5) this.moveToPos(_posX, _posY + 1);
-            else if (rand < 7) this.moveToPos(_posX - 1, _posY);
-            else if (rand < 9) this.moveToPos(_posX, _posY - 1);
-
-            else this.exploreNeighborField(_posX, _posY); //...?
+                        var random = Math.floor((Math.random() * 100) + 1);
+                        var index = random % randomMoves.length;
+                        newCoord = randomMoves[index];
+                    }
+                }
+                moveToPos(newCoord.getPosX(), newCoord.getPosY());
+            }
         }
-        return new Coordinate(this.x, this.y);
-    }
+        //else console.log("Out of energy...waiting for next run");
+    };
 
-    // timeout, interval, Server nen callback mitgeben?
-    this.exploreNeighborField = function(_posX, _posY)
+    var moveToPos = function(_posX, _posY)
     {
-        console.log("Exploring neighborfield at (" + _posX + "," + _posY + ")");
-        this.timeLeft = this.timeLeft - 500;
-        return "nichts entdeckt!";
-    }
+        //console.log("Bot " + botId + " requests moving to (" + _posX + "," + _posY + ")");
+        // toDo: Implement BOT action moveTo(gameId, botId, posX, posY) in a backend controller
+        // toDo: It is not possible to move into a wall, over an enemy bot or a not-neighbor-field
+        // toDo: Moving (speed?) against a wall or an enemy bot results in damage (game option: wall damage)
+        energyLeft = energyLeft - actionCosts.moveADefaultField;
+        // the backend action does not exist yet
+        onMoveToPosSucess(_posX, _posY);
+    };
 
-    this.moveToPos = function(_posX, _posY)
+    var onMoveToPosSucess = function(_posX, _posY)
     {
-        console.log("Try to Move one field to (" + _posX + "," + _posY + ")");
-        // ckeck if it is possible to trabel to the new position
-        var neighboorField = this.exploreNeighborField(_posX, _posY);
-        if (neighboorField)
-        {
-            ;
-        }
-        // else move there copy your sprite there and repair the old battle field tile from model
-        this.timeLeft = this.timeLeft - 500;
-    }
+        //console.log("Bot " + botId + " has moved to (" + _posX + "," + _posY + ")");
+        drawBotAt(botId, new Coordinate(_posX, _posY), new Coordinate(posX, posY), battleField);
+        maze.addTravelledCoordinates(new Coordinate(_posX, _posY));
+        posX = _posX;
+        posY = _posY;
+        nextMove();
+    };
 
-    this.travelCoordList = function(_coordList)
+    var exploreField = function(_posX, _posY)
     {
+        // console.log("Bot " + botId + " requests exploring field at (" + _posX + "," + _posY + ")");
+        energyLeft = energyLeft - actionCosts.exploreField;
+        //console.log("Energy left: " + energyLeft);
+        // backend call
+        processGetFieldState(botId, _posX, _posY, onExploreFieldError, onExploreFieldSuccess)
+    };
 
-    }
-
-    this.shout = function(_text)
+    var onExploreFieldSuccess = function(_result)
     {
+        var parameters = _result.actionParameters;
+        var gameName = parameters.gameName;
+        var data = _result.generatedData;
+        var type = data.type;
 
-    }
+        //showAtStatusConsole("Bot " + botId + " discovered field [" + type + "] in game '" + gameName + "' at pos (" + posX + "x" + posY + ")", true);
+        drawImageAtPos(loadedImages[type], new Coordinate(parameters.posX, parameters.posY));
+        maze.setFieldData(parameters.posX, parameters.posY, type);
 
-    this.aimAt = function(_target)
+        nextMove();
+    };
+
+    var onExploreFieldError = function(_xmlHttpRequest, _textStatus, _message)
     {
+        var errorCode = _xmlHttpRequest.status;
+        var consoleMessage = "Network Error: " + errorCode + " (" + _textStatus + ")" + " {" + _message + "}";
+        //console.log("Bot " + botId + " not able to explore field because " + consoleMessage);
+        //showAtStatusConsole(consoleMessage, false);
+        nextMove();
+    };
 
-    }
-
-    this.defense = function()
-    {
-
-    }
-
-    this.attack = function()
-    {
-
-    }
-
-    this.setRoundTime = function()
-    {
-
-    }
-
-    this.setPosX = function(_newPosX)
-    {
-        this.posX = _newPosX;
-    }
-
-    this.setPosY = function(_newPosY)
-    {
-        this.posY = _newPosY;
-    }
-
-    this.getPosX = function()
-    {
-        return this.posX;
-    }
-
-    this.getPosY = function()
-    {
-        return this.posY;
-    }
-//  ___________________________________________________________
-    var privat = 'blubb';
-    var privateAlert = function() { alert(privat); }
-    this.publicAlert = function(_input) { alert(_input); }
 }
