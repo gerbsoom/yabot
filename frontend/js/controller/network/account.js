@@ -12,9 +12,19 @@ function processRegister(_loginName, _password)
     {
         if (checkResult(data))
         {
-            handleRegister(data);
+            onHandleRegister(data);
         }
     }, checkError);
+}
+
+function onHandleRegister(_result)
+{
+    var parameters = _result.actionParameters;
+    var userName = parameters.loginName;
+    if (addValidUser(userName))
+    {
+        addUserToComboBox(userName);
+    }
 }
 
 function processLogin(_loginName, _password)
@@ -31,9 +41,24 @@ function processLogin(_loginName, _password)
     {
         if (checkResult(data))
         {
-            handleLogin(data);
+            onHandleLogin(data);
         }
     }, checkError);
+}
+
+function onHandleLogin(_result)
+{
+    var parameters = _result.actionParameters;
+    var userName = parameters.loginName;
+    setLoggedInUser(userName);
+    getRegisteredComponent("RegisteredInputField_loginPasswordField").setFieldText("");
+
+    updateLoggedInFieldLabel(userName);
+
+    if (addValidUser(userName))
+    {
+        addUserToComboBox(userName);
+    }
 }
 
 function processLogout(_otherUser)
@@ -66,4 +91,11 @@ function processLogout(_otherUser)
         showAtStatusConsole("No user was logged in...", false);
 
     }
+}
+
+function handleLogout(_result)
+{
+    setLoggedInUser(null);
+    updateLoggedInFieldLabel("Null");
+    showAtStatusConsole("User was successfully logged off", false);
 }

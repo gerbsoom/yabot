@@ -1,19 +1,6 @@
-function workerSupport()
-{
-    return typeof(Worker) !== "undefined";
-}
-
 function addElementToComponent(_component, _newElement)
 {
     _component.appendChild(_newElement);
-}
-
-function addElementsToComponent(_component, _elements)
-{
-    for (var i=0; i < _links.length; i++)
-    {
-        _component.appendChild(_elements[i]);
-    }
 }
 
 function removeElementFromComponent(_component, _element)

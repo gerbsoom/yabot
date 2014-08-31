@@ -1,22 +1,28 @@
 function generateRegisterPanel()
 {
-    var registerMainPanel = generateDiv("float-left", "registerMainPanel", "<h1>Register an Account</h1>");
+    var registerMainPanel = generateDiv("float-left", "registerMainPanel", "<p></p>");
 
-    var registerNameField = addClassAndId(createInputField("text", ""), "inputAndLabels", "registerNameField");
+    var registerNameField = new InputField("registerNameField", "text", "", "Username: ");
+    addElementToComponent(registerMainPanel, registerNameField.container);
+    var registerPasswordField = new InputField("registerPasswordField", "password", "", "Password: ");
+    addElementToComponent(registerMainPanel, registerPasswordField.container);
+    var registerPasswordRetype = new InputField("registerPasswordRetype", "password", "", "Re-type  : ");
+    addElementToComponent(registerMainPanel, registerPasswordRetype.container);
+
+/*    var registerNameField = addClassAndId(createInputField("text", ""), "inputAndLabels", "registerNameField");
     var registerPasswordField = addClassAndId(createInputField("password", ""), "inputAndLabels", "registerPasswordField");
     var registerPasswordRetype = addClassAndId(createInputField("password", ""), "inputAndLabels", "registerPasswordRetype");
     var registerNameFieldLabel = addClassAndId(createLabelForInputField(registerNameField, "New Username"), "inputAndLabels", "registerNameFieldLabel");
     var registerPasswordLabel = addClassAndId(createLabelForInputField(registerPasswordField, "Choose password"), "inputAndLabels", "registerPasswordLabel");
     var registerPasswordRetypeLabel = addClassAndId(createLabelForInputField(registerPasswordRetype, "Re-type password"), "inputAndLabels", "registerPasswordRetypeLabel");
-
     addElementToComponent(registerMainPanel, registerNameFieldLabel);
     addElementToComponent(registerMainPanel, registerNameField);
     addElementToComponent(registerMainPanel, registerPasswordLabel);
     addElementToComponent(registerMainPanel, registerPasswordField);
     addElementToComponent(registerMainPanel, registerPasswordRetypeLabel);
     addElementToComponent(registerMainPanel, registerPasswordRetype);
-
-    var registerButton = addClassAndId(generateButton("registerButton", "Register new Account"), "inputAndLabels", "registerPasswordRetypeLabel");
+*/
+    var registerButton = addClassAndId(generateButton("registerButton", "Register Account"), "inputAndLabels", "registerPasswordRetypeLabel");
     registerButton.onclick = function()
     {
         var registerNameField = document.getElementById("registerNameField");

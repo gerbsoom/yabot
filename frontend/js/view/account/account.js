@@ -4,6 +4,7 @@ function generateAccountTabPanel()
 
     accountTabPanel.addToPanel(generateLoginPanel());
     accountTabPanel.addToPanel(generateRegisterPanel());
+    accountTabPanel.addToPanel(generateManagePanel());
 
     return accountTabPanel.tabPage;
 }

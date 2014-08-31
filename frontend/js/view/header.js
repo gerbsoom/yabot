@@ -1,6 +1,6 @@
 function generateHeader()
 {
-    var header = generateDiv("header", "header", "<h2>__yaBOTGAme__</h2>");
+    var header = generateDiv("header", "header", "<h2>_yaBOT_</h2>");
     var headerStatusPanel = generateDiv("headerStatusPanel", "headerStatusPanel");
 
     var statusConsole = generateDiv("statusConsole", "statusConsole");
@@ -8,25 +8,18 @@ function generateHeader()
 
     addElementToComponent(statusConsole, statusConsoleTextArea);
 
-    var consoleButton = addClassAndId(generateButton("consoleButton", "Hide"), "consoleButton");
-    consoleButton.onclick = function() { getBattleFielData("game32"); };
-    addElementToComponent(statusConsole, consoleButton);
+    var consoleButtonMin = addClassAndId(generateButton("consoleButtonMin", "_"), "consoleButtonMin");
+    var consoleButtonReset = addClassAndId(generateButton("consoleButtonReset", "[]"), "consoleButtonReset");
+    var consoleButtonClear = addClassAndId(generateButton("consoleButtonClear", "CLS"), "consoleButtonClear");
+    consoleButtonMin.onclick = minimzeStatusConsole;
+    consoleButtonReset.onclick = resetStatusConsole;
+    consoleButtonClear.onclick = clearStatusConsole;
+    addElementToComponent(statusConsole, consoleButtonMin);
+    addElementToComponent(statusConsole, consoleButtonReset);
+    addElementToComponent(statusConsole, consoleButtonClear);
 
     addElementToComponent(headerStatusPanel, statusConsole);
     addElementToComponent(header, headerStatusPanel);
 
-    /**var loggedInUserLabel = addClassAndId(createLabelForInputField(null, "Logged in as: NOT logged in"), "loggedInUserLabel", "loggedInUserLabel");
-    var progressDiv = document.createElement("div");
-    progressDiv.setAttribute('class', "progressDiv");
-    progressDiv.setAttribute('id', "progressDiv");
-
-    var progress = document.createElement("PROGRESS");
-    progress.setAttribute('class', "myProgress");
-    progress.setAttribute('id', "myProgress");
-    progress.setAttribute('max', 100);
-    progress.value = 0;
-    addElementToComponent(progressDiv, progress);
-    addElementToComponent(headerStatusPanel, progressDiv);
-    */
     return header;
 }

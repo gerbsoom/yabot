@@ -12,6 +12,26 @@ function showAtStatusConsole(_msg, _append)
     statusConsoleTextArea.innerHTML = statusMessage + "\n";
 }
 
+function clearStatusConsole()
+{
+    var statusConsoleTextArea = document.getElementById("statusConsoleTextArea");
+    statusConsoleTextArea.innerHTML = "";
+}
+
+function minimzeStatusConsole()
+{
+    var statusConsoleTextArea = document.getElementById("statusConsoleTextArea");
+    statusConsoleTextArea.style.width = "0px";
+    statusConsoleTextArea.style.height = "0px";
+}
+
+function resetStatusConsole()
+{
+    var statusConsoleTextArea = document.getElementById("statusConsoleTextArea");
+    statusConsoleTextArea.style.width = "450px";
+    statusConsoleTextArea.style.height = "140px";
+}
+
 function showAtGameConsole(_gameName, _msg, _append)
 {
     var d = new Date ();

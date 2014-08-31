@@ -16,11 +16,7 @@ function loadNextImage(_image, _index, _maxIndex)
         var image = createImage(imageList[_index]);
         image.onload = loadNextImage(image, parseInt(_index) + 1, _maxIndex);
     }
-    else
-    {
-        imagesLoaded = true;
-        console.log("Load finished")
-    }
+    else imagesLoaded = true;
 }
 
 function getImageListForLoading()

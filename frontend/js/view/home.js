@@ -16,9 +16,17 @@ function generateHomeTabPanel()
     addElementToComponent(featurePanel, generateDiv("float-left", "featureList2", featureList2));
     addElementToComponent(featurePanel, generateDiv("float-left", "featureList3", featureList3));
 
+    var featurePanelDescription = "<p>Start registering a new or log into an existing account, create a new game, join it and hit one of the buttons to start a Bot in the menu 'Battlefield'</p>";
+    var featurePanelDescriptionDiv = generateDiv("component", "featurePanelDescriptionPanel", featurePanelDescription, "float: left");
+    addElementToComponent(featurePanel, featurePanelDescriptionDiv);
+
     addElementToComponent(homeTabPanel, welcomePanel);
     addElementToComponent(homeTabPanel, descriptionPanel);
     addElementToComponent(homeTabPanel, featurePanel);
+
+    var updateChannelDescription = "<p>Once a game is successfuly joined, a fast game channel will be established to populate field updates</p>";
+    var updateChannelPanel = generateDiv("component", "updateChannelPanel", "<h1>Websocket Connection</h1>" + updateChannelDescription);
+    addElementToComponent(homeTabPanel, updateChannelPanel);
 
     return homeTabPanel;
 }

@@ -21,15 +21,6 @@ function generateListGamesPanel()
     }
     addElementToComponent(generateListGamesPanel, disconnectGameButton);
 
-    /**var deleteGameButton = addClassAndId(generateButton("deleteGameButton", "Delete Game"), "deleteGameButton", "deleteGameButton");
-    deleteGameButton.onclick = function()
-    {
-        var gameSelectionBox = document.getElementById("serverGamesComboBox");
-        var selectedGame = gameSelectionBox.options[gameSelectionBox.selectedIndex].text;
-        processDeleteGame(selectedGame);
-    }
-    addElementToComponent(generateListGamesPanel, deleteGameButton);*/
-
     var joinServerGameButton = addClassAndId(generateButton("joinServerGameButton", "Connect to Game"), "gameMenuButtons", "joinServerGameButton");
     joinServerGameButton.onclick = function()
     {

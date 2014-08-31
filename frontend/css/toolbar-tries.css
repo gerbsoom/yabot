@@ -168,6 +168,15 @@ ___________________________________________________________
     font-family: Consolas, monospace;
 }
 
+.buttonLabel
+{
+    float: left;
+    width: 200px;
+    text-align: left;
+    color: #FFFFFF;
+    font-family: Consolas, monospace;
+}
+
 .selectBoxLabel
 {
     display: inline-block;
