@@ -74,7 +74,7 @@ function generateBattlefieldTabPanel()
     addElementToComponent(rightToolBox, explorerBotButton);
 
     var serverBotButton = addClassAndId(generateButton("serverBotButton", "Add RealGameBot"), "battlefieldButton");
-    serverBotButton.onclick = processAddBotToServerGame;
+    serverBotButton.onclick = processAddBot;
     addElementToComponent(rightToolBox, serverBotButton);
 
     var canvasComponent = generateDiv("component", "CanvasComponent");

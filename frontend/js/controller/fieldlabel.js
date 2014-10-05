@@ -6,6 +6,8 @@
  * @author Markus Riegert <desmodul@drow-land.de>
  */
 
+// toDo: Check how this function could work with registering at the LoginStatusUpdateChannel of the ComponentRegister.
+
 function updateLoggedInFieldLabel(_userName)
 {
     var retrievedLoggedInFieldLabel = document.getElementById("loggedInFieldLabel");

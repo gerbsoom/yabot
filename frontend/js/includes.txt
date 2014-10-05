@@ -33,6 +33,7 @@ js/lib/imageloader.js
 js/lib/model/bot.js
 js/lib/model/coordinate.js
 js/lib/model/maze.js
+js/lib/ui/componentregister.js
 js/lib/ui/component/tabpage.js
 js/lib/ui/component/inputfield.js
 js/lib/ui/component/selectbox.js

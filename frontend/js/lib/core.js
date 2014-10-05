@@ -51,12 +51,6 @@ function generateDiv(_className, _tagId, _innerText, _style)
     return newDiv;
 }
 
-
-function generateClearFixElement()
-{
-    return generateDiv("clearfix");
-}
-
 function generateTabPanelDiv(_className, _tagId, _style, _width, _height, _tabName)
 {
     var newTabPanel = generateDiv(_className, _tagId, null, _style);

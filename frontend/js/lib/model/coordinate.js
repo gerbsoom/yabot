@@ -6,6 +6,13 @@
  * @author Markus Riegert <desmodul@drow-land.de>
  */
 
+/**
+ * Small math helper to avoid some lines of code.
+ *
+ * @param _posX The X-part of the Coordinate.
+ * @param _posY The Y-part of the Coordinate.
+ * @constructor
+ */
 function Coordinate(_posX, _posY)
 {
     var posX = _posX;

@@ -6,6 +6,24 @@
  * @author Markus Riegert <desmodul@drow-land.de>
  */
 
+/**
+ * Contains all game-related backend calls.
+ *
+ * Each backend call uses 'checkResult' to check if the server returned an error.
+ * In the case of a backend error, 'checkError' is called to parse for more details.
+ * Otherwise the success callback 'onHandle<ActionName>' is invoked to process the response.
+ *
+ * toDo: Parameter serverUrl should be added to all methods and made optionally
+ */
+
+/**
+ * Executes the AJAX-Request 'createGame'.
+ *
+ * @param _gameName The name of the game that gets created.
+ * @param _gameWidth The width of the game that gets created.
+ * @param _gameHeight The height of the game that gets created.
+ * @param _gameNumPlayer The amount of allowed players in the game.
+ */
 function processCreateGame(_gameName, _gameWidth, _gameHeight, _gameNumPlayer)
 {
     var userName = getLoggedInUser();
@@ -28,6 +46,13 @@ function processCreateGame(_gameName, _gameWidth, _gameHeight, _gameNumPlayer)
     }, checkError);
 }
 
+/**
+ * Callback which gets triggered for successful 'createGame' calls.
+ *
+ * Adds the created to local storage and the createdGamesComboBox.
+ *
+ * @param _result Contains the server response.
+ */
 function onHandleCreateGame(_result)
 {
     var parameters = _result.actionParameters;
@@ -39,6 +64,11 @@ function onHandleCreateGame(_result)
     }
 }
 
+/**
+ * Executes the AJAX-Request 'deleteGame'.
+ *
+ * @param _gameName The name of the game that gets deleted.
+ */
 function processDeleteGame(_gameName)
 {
     var userName = getLoggedInUser();
@@ -58,6 +88,13 @@ function processDeleteGame(_gameName)
     }, checkError);
 }
 
+/**
+ * Callback which gets triggered for successful 'deleteGame' calls.
+ *
+ * Logs on several channels.
+ *
+ * @param _result Contains the server response.
+ */
 function onHandleDeleteGame(_result)
 {
     var parameters = _result.actionParameters;
@@ -68,6 +105,9 @@ function onHandleDeleteGame(_result)
     showAtGameConsole(getJoinedGame(), "Game " + gameName + " deleted");
 }
 
+/**
+ * Executes the AJAX-Request 'listGames'.
+ */
 function processListServerGames()
 {
     var userName = getLoggedInUser();
@@ -86,6 +126,13 @@ function processListServerGames()
     }, checkError);
 }
 
+/**
+ * Callback which gets triggered for successful 'listGames' calls.
+ *
+ * Adds the retrieved entries to the serverGame- and createdGamesComboBox.
+ *
+ * @param _result Contains the server response.
+ */
 function onHandleListGames(_result)
 {
     var data = _result.generatedData;
@@ -102,6 +149,11 @@ function onHandleListGames(_result)
     showAtGameConsole(getJoinedGame(), "GameList processed");
 }
 
+/**
+ * Executes the AJAX-Request 'joinGame'.
+ *
+ * @param  _gameName The name of the game that gets joined.
+ */
 function processJoinServerGame(_gameName)
 {
     var userName = getLoggedInUser();
@@ -121,6 +173,14 @@ function processJoinServerGame(_gameName)
     }, checkError);
 }
 
+/**
+ * Callback which gets triggered for successful 'joinGame' calls.
+ *
+ * Displays the returned values on the game console, sets the game session key and the joined game.
+ * Tries to establish the websocket connections with the nodejs server using the returned game session key.
+ *
+ * @param _result Contains the server response.
+ */
 function onHandleJoinGame(_result)
 {
     var parameters = _result.actionParameters;
@@ -137,6 +197,13 @@ function onHandleJoinGame(_result)
     setJoinedGame(gameName);
 }
 
+/**
+ * Executes the AJAX-Request 'disconnectGame'.
+ *
+ * toDo: The established websocket connection should be also disconnected here.
+ *
+ * @param  _gameName The name of the game that gets disconnected.
+ */
 function processDisconnectGame(_gameName)
 {
     var userName = getLoggedInUser();
@@ -156,6 +223,13 @@ function processDisconnectGame(_gameName)
     }, checkError);
 }
 
+/**
+ * Callback which gets triggered for successful 'disconnectGame' calls.
+ *
+ * Deletes the joined game and the game session key from the local storage.
+ *
+ * @param _result Contains the server response.
+ */
 function onHandleDisconnectGame(_result)
 {
     var parameters = _result.actionParameters;

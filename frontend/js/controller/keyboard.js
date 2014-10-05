@@ -6,6 +6,11 @@
  * @author Markus Riegert <desmodul@drow-land.de>
  */
 
+/**
+ * Filters password fields for the keyboard event 'Enter' and triggers the Login-action.
+ *
+ * @param e The keyboard event which gets filtered for 'Enter'.
+ */
 function filterForEnterEventInLoginFields(e)
 {
     console.log("Processing keyboard event...");
@@ -14,6 +19,9 @@ function filterForEnterEventInLoginFields(e)
     if (keyCode == '13') onLoginActionTriggered();
 }
 
+/**
+ * Triggered on pressing the login button or 'Enter' in password fields.
+ */
 function onLoginActionTriggered()
 {
     var loginField = document.getElementById("loginField");
