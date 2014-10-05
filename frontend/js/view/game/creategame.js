@@ -1,3 +1,11 @@
+/**
+ * This file is part of yaBotGame.
+ * Please check the file LICENSE.md for information about the license.
+ *
+ * @copyright Markus Riegert 2014
+ * @author Markus Riegert <desmodul@drow-land.de>
+ */
+
 function generateCreateGamePanel()
 {
     var createGamePanel = generateDiv("float-left", "createGamePanel", "<h1>Create a new game </h1><p></p>");

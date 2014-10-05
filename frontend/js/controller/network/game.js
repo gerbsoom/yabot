@@ -1,3 +1,11 @@
+/**
+ * This file is part of yaBotGame.
+ * Please check the file LICENSE.md for information about the license.
+ *
+ * @copyright Markus Riegert 2014
+ * @author Markus Riegert <desmodul@drow-land.de>
+ */
+
 function processCreateGame(_gameName, _gameWidth, _gameHeight, _gameNumPlayer)
 {
     var userName = getLoggedInUser();

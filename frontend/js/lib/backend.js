@@ -1,4 +1,12 @@
 /**
+ * This file is part of yaBotGame.
+ * Please check the file LICENSE.md for information about the license.
+ *
+ * @copyright Markus Riegert 2014
+ * @author Markus Riegert <desmodul@drow-land.de>
+ */
+
+/**
  * Executes an (jQuery) AJAX call with the provided parameters at \c _url.
  *
  * If the call succeeds without an error the result is passed to \c _successCallback.

@@ -1,4 +1,12 @@
 /**
+ * This file is part of yaBotGame.
+ * Please check the file LICENSE.md for information about the license.
+ *
+ * @copyright Markus Riegert 2014
+ * @author Markus Riegert <desmodul@drow-land.de>
+ */
+
+/**
  * Once the bot is successfully added to a game and the game started, method makeTheMove() will be triggered
  * each round one time as callback, the timer is adjustable with the slider in the battlefield component.
  *

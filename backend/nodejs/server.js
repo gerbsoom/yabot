@@ -1,3 +1,11 @@
+/**
+ * This file is part of yaBotGame.
+ * Please check the file LICENSE.md for information about the license.
+ *
+ * @copyright Markus Riegert 2014
+ * @author Markus Riegert <desmodul@drow-land.de>
+ */
+
 // Stores the available session keys together with the unique user login as index
 var sessionKeys;
 // hold clients that have joined a game to populate updates to them
